@@ -1,0 +1,32 @@
+{
+  "name": "devana-react",
+  "version": "1.0.08",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Scriptor Artis",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.2.61",
+    "react": "18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@uiw/react-markdown-preview": "^5.0.7",
+    "prettier": "^3.2.5"
+  }
+}
