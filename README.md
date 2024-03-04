@@ -2,6 +2,8 @@
 
 Le composant `Conversation` est un composant React qui implémente une conversation interactive avec une intelligence artificielle. Il utilise un hook personnalisé, `useChat`, pour gérer la communication bidirectionnelle entre l'utilisateur et l'IA.
 
+<img width="843" alt="Capture d’écran 2024-03-04 à 16 58 53" src="https://github.com/Scriptor-Group/devana-react/assets/4999786/76f503e7-a37c-4e87-84b7-ca256df780d0">
+
 ## Les props
 
 Le composant `Conversation` accepte les props suivants :
