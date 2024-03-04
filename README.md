@@ -6,12 +6,11 @@ Le composant `Conversation` est un composant React qui implémente une conversat
 
 Le composant `Conversation` accepte les props suivants :
 
-- `metadata` (object) : Metadonnées optionnelles supplémentaires à passer au chat.
-- `aiId` (string) : L'identifiant unique de l'IA avec laquelle l'utilisateur va interagir.
-- `chatId` (string) : L'identifiant unique du chat, si un chat existant est utilisé.
-- `agentComponent` (React.Component): Un composant personnalisé pour afficher les messages de l'agent.
-- `userComponent` (React.Component): Un composant personnalisé pour afficher les messages de l'utilisateur.
-- `children` (React.ReactNode): Éléments enfants optionnels à afficher dans le composant de conversation.
+- `metadata` (object) : Metadonnées optionnelles supplémentaires à passer au chat, permettant l'analyse des KPI.
+- `aiId` (string) : L'identifiant unique de l'IA avec laquelle l'utilisateur va interagir, présent dans l'interface Devana.
+- `chatId` (string) : L'identifiant unique du chat, si un chat existant est utilisé (permet de récupérer un chat existant).
+- `agentComponent` (React.Component): Un composant personnalisé pour afficher les messages de l'agent, nous recommandons idéalement d'utiliser `@uiw/react-markdown-preview` pour l'affichage des messages.
+- `userComponent` (React.Component): Un composant personnalisé pour afficher les messages de l'utilisateur, nous recommandons idéalement d'utiliser `@uiw/react-markdown-preview` pour l'affichage des messages.
 
 ## Utilisation
 
