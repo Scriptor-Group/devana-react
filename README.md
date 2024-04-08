@@ -4,6 +4,26 @@ Le composant `Conversation` est un composant React qui implémente une conversat
 
 <img width="843" alt="Présentation" src="https://github.com/Scriptor-Group/devana-react/raw/main/assets/presentation.png">
 
+## Installation
+
+Pour installer le composant `Conversation`, vous devez d'abord ajouter le package à votre projet en utilisant npm ou yarn :
+
+```bash
+npm install devana-react
+```
+
+ou
+
+```bash
+yarn add devana-react
+```
+
+Ensuite, vous pouvez importer le composant dans votre fichier et l'utiliser comme suit :
+
+```jsx
+import { Conversation, useChat, useApi } from "devana-react";
+```
+
 ## Props
 
 Le composant `Conversation` accepte les props suivantes :
@@ -58,3 +78,7 @@ function App() {
 - Permet de personnaliser les couleurs de fond de la zone de conversation.
 - Permet de personnaliser les couleurs du bouton d'envoi.
 - Prend en charge les traductions via l'objet `intls`.
+
+## Chat API
+
+Pour plus d'informations sur l'API de chat, veuillez consulter la documentation officielle : [https://github.com/Scriptor-Group/documentation/blob/main/Devana/publicAgentAPI.md](https://github.com/Scriptor-Group/documentation/blob/main/Devana/publicAgentAPI.md).
