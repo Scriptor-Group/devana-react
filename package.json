@@ -1,10 +1,12 @@
 {
   "name": "devana-react",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
