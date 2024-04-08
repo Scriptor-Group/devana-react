@@ -1,9 +1,17 @@
 import React from "react";
+import { IIntls } from "../types";
 interface IProps {
-    metadata?: any;
-    children?: React.ReactNode;
-    aiId: string;
-    chatId?: string;
+    publicKey: string;
+    welcomeMessage?: string;
+    assistantBackgroundColor?: string;
+    assistantTextColor?: string;
+    userBackgroundColor?: string;
+    userTextColor?: string;
+    chatBackgroundColor?: string;
+    chatBackgroundSecondaryColor?: string;
+    buttonBackgroundColor?: string;
+    buttonTextColor?: string;
+    intls?: IIntls;
 }
 export declare const Conversation: React.FC<IProps>;
 export {};

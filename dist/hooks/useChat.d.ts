@@ -1,19 +1,19 @@
-export declare const useChat: ({ iaId, userToken, }: {
-    iaId: string;
-    userToken?: string | undefined;
+/**
+ * Custom hook for handling chat functionality.
+ * @param {Object} options - The options object.
+ * @param {string | null} options.userToken - The user token.
+ * @returns {Object} - An object containing the sendMessage function, generating state, and handleStop function.
+ */
+export declare const useChat: ({ userToken }: {
+    userToken?: string | null;
 }) => {
     sendMessage: (message: string, options: {
-        files?: any[] | undefined;
-        chatId?: string | undefined;
-        advancedCrawling?: boolean | undefined;
-        searchZone?: any[] | undefined;
-        onMessage: (message: string) => void;
-        onFinish: (data: {
+        onMessage?: (message: string) => void;
+        onFinish?: (data: {
             text: string;
-            chatId: string;
         }) => void;
-        onError: (error: any) => void;
-    }) => void;
+        onError?: (error: string) => void;
+    }) => Promise<void>;
     generating: boolean;
     handleStop: () => void;
 };

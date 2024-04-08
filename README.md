@@ -1,56 +1,60 @@
 # Devana React
 
-Le composant `Conversation` est un composant React qui implémente une conversation interactive avec une intelligence artificielle. Il utilise un hook personnalisé, `useChat`, pour gérer la communication bidirectionnelle entre l'utilisateur et l'IA.
+Le composant `Conversation` est un composant React qui implémente une conversation interactive avec une intelligence artificielle. Il utilise un hook personnalisé, `useChat`, pour gérer le stream entre l'utilisateur et l'IA. Ainsi que le module `useApi` pour gérer les appels sécurisé à l'API.
 
-<img width="843" alt="Capture d’écran 2024-03-04 à 16 58 53" src="https://github.com/Scriptor-Group/devana-react/assets/4999786/76f503e7-a37c-4e87-84b7-ca256df780d0">
+<img width="843" alt="Présentation" src="assets/presentation.png">
 
-## Les props
+## Props
 
-Le composant `Conversation` accepte les props suivants :
+Le composant `Conversation` accepte les props suivantes :
 
-- `metadata` (object) : Metadonnées optionnelles supplémentaires à passer au chat, permettant l'analyse des KPI.
-- `aiId` (string) : L'identifiant unique de l'IA avec laquelle l'utilisateur va interagir, présent dans l'interface Devana.
-- `chatId` (string) : L'identifiant unique du chat, si un chat existant est utilisé (permet de récupérer un chat existant).
-- `agentComponent` (React.Component): Un composant personnalisé pour afficher les messages de l'agent, nous recommandons idéalement d'utiliser `@uiw/react-markdown-preview` pour l'affichage des messages.
-- `userComponent` (React.Component): Un composant personnalisé pour afficher les messages de l'utilisateur, nous recommandons idéalement d'utiliser `@uiw/react-markdown-preview` pour l'affichage des messages.
+- `publicKey` (obligatoire) : La clé publique utilisée pour l'authentification avec l'API.
+- `welcomeMessage` (optionnel) : Un message de bienvenue à afficher au début de la conversation.
+- `assistantBackgroundColor` (optionnel) : La couleur de fond des messages de l'assistant.
+- `assistantTextColor` (optionnel) : La couleur du texte des messages de l'assistant.
+- `userBackgroundColor` (optionnel) : La couleur de fond des messages de l'utilisateur.
+- `userTextColor` (optionnel) : La couleur du texte des messages de l'utilisateur.
+- `chatBackgroundColor` (optionnel) : La couleur de fond principale de la zone de conversation.
+- `chatBackgroundSecondaryColor` (optionnel) : La couleur de fond secondaire de la zone de conversation (utilisée pour le dégradé).
+- `buttonBackgroundColor` (optionnel) : La couleur de fond du bouton d'envoi.
+- `buttonTextColor` (optionnel) : La couleur du texte du bouton d'envoi.
+- `intls` (optionnel) : Un objet contenant les traductions pour les différents éléments du composant.
 
 ## Utilisation
 
-Pour utiliser le composant `Conversation`, importez-le dans votre fichier comme suit :
+Pour utiliser le composant `Conversation`, vous devez l'importer dans votre fichier et le rendre en lui passant les props nécessaires. Voici un exemple d'utilisation :
 
 ```jsx
-import { Conversation } from "chemin/vers/Conversation";
+import { Conversation } from ".devana-react";
+
+function App() {
+  return (
+    <div>
+      <Conversation
+        publicKey="votre_clé_publique"
+        welcomeMessage="Bienvenue dans la conversation !"
+        assistantBackgroundColor="#f0f0f0"
+        assistantTextColor="#333333"
+        userBackgroundColor="#e0e0e0"
+        userTextColor="#111111"
+        chatBackgroundColor="#ffffff"
+        chatBackgroundSecondaryColor="#f5f5f5"
+        buttonBackgroundColor="#007bff"
+        buttonTextColor="#ffffff"
+      />
+    </div>
+  );
+}
 ```
 
-Puis, utilisez le composant dans votre code comme suit :
+## Fonctionnalités
 
-```jsx
-<Conversation aiId="votre-ai-id" />
-```
-
-Vous pouvez également fournir des composants personnalisés `agentComponent` et `userComponent` pour personnaliser l'affichage des messages de l'agent et de l'utilisateur.
-
-```jsx
-<Conversation
-  aiId="votre-ai-id"
-  agentComponent={MonAgentComponent}
-  userComponent={MonUserComponent}
-/>
-```
-
-### agentComponent et userComponent
-
-Ces composants reçoivent un seul argument, un objet avec une propriété `message` qui contient le message de l'agent ou de l'utilisateur. Il doit renvoyer un élément React.
-
-## Fonctionnement interne
-
-- Le composant utilise l'état local pour gérer l'identifiant du chat, la requête en cours et les messages de la conversation.
-- Il utilise le hook `useChat` pour envoyer des messages à l'IA et gérer les réponses.
-- Quand un message est soumis, il est ajouté à la liste des messages et envoyé à l'IA.
-- Les réponses de l'IA sont ajoutées à la liste des messages dès qu'elles sont reçues.
-- En cas d'erreur lors de l'envoi du message, un message d'erreur est affiché dans la console.
-- Les messages de l'utilisateur et de l'IA sont affichés dans une fenêtre de conversation, avec les messages de l'utilisateur alignés à droite et les messages de l'IA à gauche.
-
-## Styles
-
-Le composant utilise des styles en ligne pour définir son apparence. Vous pouvez personnaliser ces styles en passant vos propres composants `agentComponent` et `userComponent`.
+- Affiche les messages échangés entre l'utilisateur et l'assistant.
+- Permet à l'utilisateur de saisir et d'envoyer des messages.
+- Gère automatiquement le défilement vers le bas lorsque de nouveaux messages sont ajoutés.
+- Utilise la bibliothèque `@uiw/react-markdown-preview` pour afficher les messages au format Markdown.
+- Affiche un message de bienvenue personnalisable au début de la conversation.
+- Permet de personnaliser les couleurs de fond et de texte des messages de l'assistant et de l'utilisateur.
+- Permet de personnaliser les couleurs de fond de la zone de conversation.
+- Permet de personnaliser les couleurs du bouton d'envoi.
+- Prend en charge les traductions via l'objet `intls`.

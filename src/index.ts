@@ -1,6 +1,8 @@
 import { useChat } from "./hooks/useChat";
+import { useApi } from "./hooks/useApi";
+export { Conversation } from "./Components/Conversation";
 
-export { Conversation } from './Components/Conversation'
 export default {
-    useChat,
-}
+  useChat,
+  useApi,
+};

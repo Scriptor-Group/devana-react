@@ -11,8 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useChat = void 0;
 const react_1 = require("react");
-const API_URL = `https://api.devana.ai`;
-const useChat = ({ iaId, userToken, }) => {
+const config_1 = require("../config");
+/**
+ * Custom hook for handling chat functionality.
+ * @param {Object} options - The options object.
+ * @param {string | null} options.userToken - The user token.
+ * @returns {Object} - An object containing the sendMessage function, generating state, and handleStop function.
+ */
+const useChat = ({ userToken }) => {
     const [generating, setGenerating] = (0, react_1.useState)(false);
     const eventSource = (0, react_1.useRef)(null);
     (0, react_1.useEffect)(() => {
@@ -24,36 +30,82 @@ const useChat = ({ iaId, userToken, }) => {
             }
         };
     }, []);
-    const sendMessage = (message, options) => {
-        var _a, _b;
+    /**
+     * Sends a message to the chat server.
+     * @param {string} message - The message to send.
+     * @param {Object} options - The options object.
+     * @param {Function} options.onMessage - The callback function to handle incoming messages.
+     * @param {Function} options.onFinish - The callback function to handle when the message is finished.
+     * @param {Function} options.onError - The callback function to handle errors.
+     */
+    const sendMessage = (message, options) => __awaiter(void 0, void 0, void 0, function* () {
+        if (!userToken) {
+            options.onError && options.onError("No user token");
+            return;
+        }
         setGenerating(true);
-        eventSource.current = new EventSource(`${API_URL}/chat/${iaId}?message=${encodeURIComponent(message)}&files=${((_a = ((options === null || options === void 0 ? void 0 : options.files) || [])) === null || _a === void 0 ? void 0 : _a.length) > 0
-            ? ((options === null || options === void 0 ? void 0 : options.files) || []).map((e) => e.uploadId).join(",")
-            : ""}&chatId=${options.chatId}${userToken ? `&token=${userToken}` : ""}&advancedCrawling=${options.advancedCrawling ? "true" : "false"}${((_b = ((options === null || options === void 0 ? void 0 : options.searchZone) || [])) === null || _b === void 0 ? void 0 : _b.length) > 0
-            ? `&searchZone=${((options === null || options === void 0 ? void 0 : options.searchZone) || []).map((e) => e.value).join(",")}`
-            : ""}`);
-        eventSource.current.onmessage = (event) => __awaiter(void 0, void 0, void 0, function* () {
-            var _c, _d;
-            if ((_c = event.data) === null || _c === void 0 ? void 0 : _c.startsWith("[JSON]")) {
-                setGenerating(false);
-                const json = JSON.parse(event.data.replace("[JSON]", ""));
-                if (json) {
-                    options.onFinish && (yield options.onFinish(json));
-                }
-                return;
-            }
-            options.onMessage &&
-                (yield options.onMessage((_d = event.data) === null || _d === void 0 ? void 0 : _d.replace(/\\n/g, "\n")));
+        const url = `${config_1.API_URL}${config_1.API_VERSION}/chat/conversation/public/message`;
+        const response = yield fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                stream: true,
+                client_token: userToken,
+                messages: [
+                    {
+                        role: "user",
+                        content: message,
+                    },
+                ],
+            }),
         });
-        eventSource.current.onerror = (error) => {
-            console.error("EventSource failed:", error);
+        if (response.status !== 200) {
             setGenerating(false);
-            options.onError && options.onError(error);
-            if (eventSource.current) {
-                eventSource.current.close();
+            options.onError && options.onError(response.statusText);
+            return;
+        }
+        if (!response.body) {
+            setGenerating(false);
+            options.onError && options.onError("No response body");
+            return;
+        }
+        const reader = response.body.getReader(); // Convert ReadableStream to ReadableStreamDefaultReader
+        const loop = true;
+        let fullMessage = "";
+        while (loop) {
+            try {
+                const { done, value } = yield reader.read(); // Read the next chunk
+                if (done)
+                    break; // Exit the loop if there are no more chunks
+                const token = new TextDecoder().decode(value); // Convert the chunk to text
+                if (token.includes("DONE")) {
+                    console.log("data", fullMessage);
+                    options.onFinish && options.onFinish({ text: fullMessage });
+                    break;
+                }
+                fullMessage += token;
+                console.log("data", fullMessage);
+                options.onMessage && options.onMessage(fullMessage);
             }
-        };
-    };
+            catch (error) {
+                if (error instanceof Error && error.name === "AbortError") {
+                    console.log("Aborted");
+                    break;
+                }
+                else if (error instanceof Error) {
+                    console.error(error);
+                    options.onError && options.onError(error.message);
+                    break;
+                }
+                break;
+            }
+        }
+    });
+    /**
+     * Stops the chat functionality.
+     */
     const handleStop = () => {
         if (eventSource === null || eventSource === void 0 ? void 0 : eventSource.current) {
             eventSource.current.close();

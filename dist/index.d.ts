@@ -1,23 +1,22 @@
-export { Conversation } from './Components/Conversation';
+export { Conversation } from "./Components/Conversation";
 declare const _default: {
-    useChat: ({ iaId, userToken, }: {
-        iaId: string;
-        userToken?: string | undefined;
+    useChat: ({ userToken }: {
+        userToken?: string | null | undefined;
     }) => {
         sendMessage: (message: string, options: {
-            files?: any[] | undefined;
-            chatId?: string | undefined;
-            advancedCrawling?: boolean | undefined;
-            searchZone?: any[] | undefined;
-            onMessage: (message: string) => void;
-            onFinish: (data: {
+            onMessage?: ((message: string) => void) | undefined;
+            onFinish?: ((data: {
                 text: string;
-                chatId: string;
-            }) => void;
-            onError: (error: any) => void;
-        }) => void;
+            }) => void) | undefined;
+            onError?: ((error: string) => void) | undefined;
+        }) => Promise<void>;
         generating: boolean;
         handleStop: () => void;
+    };
+    useApi: (publicKey: string, options?: import("./hooks/useApi").IOptions | undefined) => {
+        token: string | null;
+        createToken: () => Promise<string | null>;
+        getConversationHistory: () => Promise<import("./types").IMessage[]>;
     };
 };
 export default _default;

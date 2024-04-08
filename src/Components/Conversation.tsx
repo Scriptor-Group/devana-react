@@ -1,140 +1,228 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useChat } from "../hooks/useChat";
+import styles from "./Conversation.module.css";
+import { useApi } from "../hooks/useApi";
+import { IIntls, IMessage } from "../types";
+import MuiTextField from "./TextField";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+import { MARKDOWN_PROPS } from "../config";
+import { hexToTransparentHex } from "../commons";
 
 interface IProps {
-  metadata?: any;
-  children?: React.ReactNode;
-  aiId: string;
-  chatId?: string;
-  agentComponent?: ({
-    message
-  }: {
-    message: string;
-  }) => React.ReactNode;
-  userComponent?: ({
-    message
-  }: {
-    message: string;
-  }) => React.ReactNode;
-
+  publicKey: string;
+  welcomeMessage?: string;
+  assistantBackgroundColor?: string;
+  assistantTextColor?: string;
+  userBackgroundColor?: string;
+  userTextColor?: string;
+  chatBackgroundColor?: string;
+  chatBackgroundSecondaryColor?: string;
+  buttonBackgroundColor?: string;
+  buttonTextColor?: string;
+  intls?: IIntls;
 }
 
 export const Conversation: React.FC<IProps> = ({
-  metadata,
-  children,
-  aiId,
-  chatId,
-  agentComponent,
-  userComponent,
+  publicKey,
+  welcomeMessage,
+  assistantBackgroundColor,
+  assistantTextColor,
+  userBackgroundColor,
+  userTextColor,
+  chatBackgroundColor,
+  chatBackgroundSecondaryColor,
+  buttonBackgroundColor,
+  buttonTextColor,
+  intls,
 }) => {
-  const [currentChatId, setCurrentChatId] = React.useState(chatId);
+  const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
-  const [messages, setMessages] = React.useState<
-    {
-      message: string;
-      type: "user" | "agent";
-    }[]
-  >([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const { token, createToken, getConversationHistory } = useApi(publicKey, {});
+  const { sendMessage } = useChat({ userToken: token });
+  const refScroll = React.useRef<HTMLDivElement>(null);
+  const [isAutoScroll, setIsAutoScroll] = React.useState(true);
+  const [typingMessage, setTypingMessage] = React.useState<IMessage | null>(
+    null,
+  );
 
-  const { sendMessage } = useChat({
-    iaId: aiId,
-  });
+  useEffect(() => {
+    if (isAutoScroll && refScroll.current) {
+      refScroll.current.scrollTop = refScroll.current.scrollHeight;
+    }
+  }, [messages, typingMessage, query]);
+
+  useEffect(() => {
+    if (!refScroll.current) return;
+    const scroll = refScroll.current;
+    const handleScroll = () => {
+      // -20px
+      if (scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 20) {
+        setIsAutoScroll(true);
+      } else {
+        setIsAutoScroll(false);
+      }
+    };
+    scroll.addEventListener("scroll", handleScroll);
+    return () => scroll.removeEventListener("scroll", handleScroll);
+  }, [refScroll]);
+
+  useEffect(() => {
+    if (!token) return;
+    getConversationHistory().then((data) => {
+      try {
+        setMessages(data);
+      } catch {
+        // Silently fail
+      }
+    });
+  }, [token]);
+
+  useEffect(() => {
+    if (token) return;
+    setTryCreateToken(0);
+    createToken();
+  }, [publicKey]);
+
+  useEffect(() => {
+    if (token) return;
+    if (tryCreateToken > 1) return;
+
+    setTryCreateToken((prev) => prev + 1);
+    createToken();
+  }, [token, tryCreateToken]);
 
   const handleSubmitMessage = () => {
-    setMessages((m) => [
-      ...m,
+    if (!query) return;
+
+    setMessages((prev) => [
+      ...prev,
       {
-        message: query,
-        type: "user",
+        id: `message_${prev.length + 1}`,
+        message: {
+          role: "user",
+          content: query,
+        },
+        created: Date.now(),
+        conversation_id: "",
+        usage: {
+          prompt_tokens: 0,
+          completion_tokens: 0,
+          total_tokens: 0,
+        },
       },
     ]);
+    setQuery("");
 
     sendMessage(query, {
-      files: [],
-      chatId: currentChatId,
-      advancedCrawling: false,
-      searchZone: [],
-      onMessage: (message: string) => {
-        // update last only
-        setMessages((m) => {
-          if (m.length === 0 || m[m.length - 1].type !== "agent") {
-            return [
-              ...m,
-              {
-                message,
-                type: "agent",
-              },
-            ];
+      onError: (error) => console.error(error),
+      onFinish: (data) => {
+        getConversationHistory().then((data) => {
+          try {
+            setTypingMessage(null);
+            setMessages(data);
+          } catch {
+            // Silently fail
           }
-
-          return [
-            ...m.slice(0, m.length - 1),
-            {
-              message: m[m.length - 1].message + message,
-              type: "agent",
-            },
-          ];
         });
       },
-      onFinish: (data) => {
-        setCurrentChatId(data.chatId);
-        setMessages((m) => [
-          ...m.slice(0, m.length - 1),
-          {
-            message: data.text,
-            type: "agent",
+      onMessage: (message) => {
+        setTypingMessage((value) => ({
+          id: `message_${value?.id || messages.length + 1}`,
+          message: {
+            role: "assistant",
+            content: message,
           },
-        ]);
-      },
-      onError: (error: any) => {
-        console.log(error);
+          created: Date.now(),
+          conversation_id: "",
+          usage: {
+            prompt_tokens: 0,
+            completion_tokens: 0,
+            total_tokens: 0,
+          },
+        }));
       },
     });
   };
 
   return (
     <div
+      className={styles["devana-conversation-container"]}
       style={{
-        width: "100%",
-        height: "100%",
+        backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
+      ref={refScroll}
     >
-      <div>
-        {messages.map((m, i) => (
+      <div className={styles.messages}>
+        {welcomeMessage && (
           <div
-            key={`message_${i}`}
+            className={styles[`message-assistant`]}
             style={{
-              display: "flex",
-              justifyContent: m.type === "user" ? "flex-end" : "flex-start",
+              backgroundColor: assistantBackgroundColor,
+              color: assistantTextColor,
             }}
           >
-            {m.type === "user" && userComponent ? (
-              userComponent({ message: m.message })
-            ) : m.type === "agent" && agentComponent ? (
-              agentComponent({ message: m.message })
-            ) : (
-              <div
-                style={{
-                  padding: "8px",
-                  backgroundColor: m.type === "user" ? "lightblue" : "lightgreen",
-                  borderRadius: "8px",
-                  margin: "8px",
-                  maxWidth: "70%",
-                }}
-              >
-                <b>{m.type === "user" ? "You" : "Agent"}</b>
-                <div>{m.message}</div>
-              </div>
-            )}
+            {welcomeMessage}
           </div>
-        ))}
+        )}
+        {[...messages, ...(typingMessage ? [typingMessage] : [])]
+          .filter((e) => e.message.content)
+          .sort((a, b) => a.created - b.created)
+          .map((m, i) => (
+            <div
+              key={`message_${m.id}`}
+              className={styles[`message-${m.message.role}`]}
+              style={
+                m.message.role === "assistant"
+                  ? {
+                      backgroundColor: hexToTransparentHex(
+                        assistantBackgroundColor || "#ffffff",
+                        0.8,
+                      ),
+                      color: assistantTextColor,
+                    }
+                  : {
+                      backgroundColor: hexToTransparentHex(
+                        userBackgroundColor || "#ffffff",
+                        0.8,
+                      ),
+                      color: userTextColor,
+                    }
+              }
+            >
+              <MarkdownPreview
+                {...{
+                  ...MARKDOWN_PROPS,
+                  style: {
+                    ...MARKDOWN_PROPS.style,
+                    color:
+                      m.message.role === "assistant"
+                        ? assistantTextColor
+                        : userTextColor,
+                  },
+                }}
+                source={m.message.content}
+              />
+            </div>
+          ))}
       </div>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <button onClick={handleSubmitMessage}>Send</button>
+      <div style={{ height: "50px" }} />
+      <div className={styles["devana-input"]}>
+        <MuiTextField
+          value={query}
+          onChange={(value) => setQuery(value)}
+          onSubmit={handleSubmitMessage}
+          buttonBackgroundColor={buttonBackgroundColor}
+          buttonTextColor={buttonTextColor}
+          intls={intls}
+        />
+        <div className={styles.poweredBy}>
+          Propulsé par
+          <a href="https://devana.ai" target="_blank" rel="noreferrer">
+            Devana
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
