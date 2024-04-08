@@ -1,6 +1,6 @@
 {
   "include": ["src", "./styles.d.ts"], /* Include only the src directory */
-  "exclude": ["**/*.stories.ts", "**/*.test.tsx", "node_modules", "dist"], /* Exclude all test files and node_modules */
+  "exclude": ["**/*.stories.ts", "**/*.test.tsx", "**/*.test.ts", "node_modules", "dist"], /* Exclude all test files and node_modules */
   "compilerOptions": {
     "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "module": "commonjs" /* Specify what module code is generated. */,
