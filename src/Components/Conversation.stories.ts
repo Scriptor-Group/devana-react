@@ -9,6 +9,21 @@ const meta = {
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
+    // max-width of the Canvas in pixels
+
+    // background image apple
+    backgrounds: {
+      default: "apple",
+      values: [
+        {
+          name: "apple",
+          value:
+            "url(./assets/bg-storybook.avif) center center / cover no-repeat",
+        },
+      ],
+    },
+    // padding
+    controls: { expanded: true },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],

@@ -20,12 +20,12 @@
   padding: 12px 24px;
   border-radius: 18px;
   border: none;
-  background-color: #007bff;
+  background-color: #000000de;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #000000;
 }

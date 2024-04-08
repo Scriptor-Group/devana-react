@@ -20,6 +20,7 @@ interface IProps {
   buttonBackgroundColor?: string;
   buttonTextColor?: string;
   intls?: IIntls;
+  hiddenWatermark?: boolean;
 }
 
 export const Conversation: React.FC<IProps> = ({
@@ -34,6 +35,7 @@ export const Conversation: React.FC<IProps> = ({
   buttonBackgroundColor,
   buttonTextColor,
   intls,
+  hiddenWatermark,
 }) => {
   const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
@@ -45,6 +47,9 @@ export const Conversation: React.FC<IProps> = ({
   const [typingMessage, setTypingMessage] = React.useState<IMessage | null>(
     null,
   );
+  const [error, setError] = React.useState<string | null>(null);
+  const [isPending, setIsPending] = React.useState(false);
+  const [isTyping, setIsTyping] = React.useState(false);
 
   useEffect(() => {
     if (isAutoScroll && refScroll.current) {
@@ -56,7 +61,6 @@ export const Conversation: React.FC<IProps> = ({
     if (!refScroll.current) return;
     const scroll = refScroll.current;
     const handleScroll = () => {
-      // -20px
       if (scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 20) {
         setIsAutoScroll(true);
       } else {
@@ -93,7 +97,7 @@ export const Conversation: React.FC<IProps> = ({
   }, [token, tryCreateToken]);
 
   const handleSubmitMessage = () => {
-    if (!query) return;
+    if (!query || isTyping) return;
 
     setMessages((prev) => [
       ...prev,
@@ -112,11 +116,19 @@ export const Conversation: React.FC<IProps> = ({
         },
       },
     ]);
+    setIsPending(true);
     setQuery("");
+    setError(null);
+    setIsTyping(true);
 
     sendMessage(query, {
-      onError: (error) => console.error(error),
+      onError: (error) => {
+        setError(error);
+        setIsTyping(false);
+        console.error(error);
+      },
       onFinish: (data) => {
+        setIsTyping(false);
         getConversationHistory().then((data) => {
           try {
             setTypingMessage(null);
@@ -127,6 +139,7 @@ export const Conversation: React.FC<IProps> = ({
         });
       },
       onMessage: (message) => {
+        setIsPending(false);
         setTypingMessage((value) => ({
           id: `message_${value?.id || messages.length + 1}`,
           message: {
@@ -151,62 +164,90 @@ export const Conversation: React.FC<IProps> = ({
       style={{
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
-      ref={refScroll}
     >
-      <div className={styles.messages}>
-        {welcomeMessage && (
-          <div
-            className={styles[`message-assistant`]}
-            style={{
-              backgroundColor: assistantBackgroundColor,
-              color: assistantTextColor,
-            }}
-          >
-            {welcomeMessage}
-          </div>
-        )}
-        {[...messages, ...(typingMessage ? [typingMessage] : [])]
-          .filter((e) => e.message.content)
-          .sort((a, b) => a.created - b.created)
-          .map((m, i) => (
+      <div ref={refScroll} className={styles.scrollZone}>
+        <div style={{ height: "26px" }} />
+        <div className={styles.messages}>
+          {welcomeMessage && (
             <div
-              key={`message_${m.id}`}
-              className={styles[`message-${m.message.role}`]}
-              style={
-                m.message.role === "assistant"
-                  ? {
-                      backgroundColor: hexToTransparentHex(
-                        assistantBackgroundColor || "#ffffff",
-                        0.8,
-                      ),
-                      color: assistantTextColor,
-                    }
-                  : {
-                      backgroundColor: hexToTransparentHex(
-                        userBackgroundColor || "#ffffff",
-                        0.8,
-                      ),
-                      color: userTextColor,
-                    }
-              }
+              className={styles[`message-assistant`]}
+              style={{
+                backgroundColor: assistantBackgroundColor,
+                color: assistantTextColor,
+              }}
             >
-              <MarkdownPreview
-                {...{
-                  ...MARKDOWN_PROPS,
-                  style: {
-                    ...MARKDOWN_PROPS.style,
-                    color:
-                      m.message.role === "assistant"
-                        ? assistantTextColor
-                        : userTextColor,
-                  },
-                }}
-                source={m.message.content}
-              />
+              {welcomeMessage}
             </div>
-          ))}
+          )}
+          {[...messages, ...(typingMessage ? [typingMessage] : [])]
+            .filter((e) => e.message.content)
+            .sort((a, b) => a.created - b.created)
+            .map((m, i) => (
+              <div
+                key={`message_${m.id}`}
+                className={styles[`message-${m.message.role}`]}
+                style={
+                  m.message.role === "assistant"
+                    ? {
+                        backgroundColor: hexToTransparentHex(
+                          assistantBackgroundColor || "#ffffff",
+                          0.8,
+                        ),
+                        color: assistantTextColor,
+                      }
+                    : {
+                        backgroundColor: hexToTransparentHex(
+                          userBackgroundColor || "#ffffff",
+                          0.8,
+                        ),
+                        color: userTextColor,
+                      }
+                }
+              >
+                <MarkdownPreview
+                  {...{
+                    ...MARKDOWN_PROPS,
+                    style: {
+                      ...MARKDOWN_PROPS.style,
+                      color:
+                        m.message.role === "assistant"
+                          ? assistantTextColor
+                          : userTextColor,
+                    },
+                  }}
+                  source={m.message.content}
+                />
+              </div>
+            ))}
+          {error && (
+            <div
+              className={styles[`message-assistant`]}
+              style={{
+                backgroundColor: hexToTransparentHex("#ff0000", 0.8),
+                color: "#ffffff",
+              }}
+            >
+              {error}
+            </div>
+          )}
+          {isPending && (
+            <div
+              className={styles[`message-assistant`]}
+              style={{
+                backgroundColor: assistantBackgroundColor,
+                color: assistantTextColor,
+              }}
+            >
+              <div className={styles.typing}>
+                <div className={styles.dot} />
+                <div className={styles.dot} />
+                <div className={styles.dot} />
+              </div>
+            </div>
+          )}
+        </div>
+        <div style={{ height: "50px" }} />
       </div>
-      <div style={{ height: "50px" }} />
       <div className={styles["devana-input"]}>
         <MuiTextField
           value={query}
@@ -216,12 +257,14 @@ export const Conversation: React.FC<IProps> = ({
           buttonTextColor={buttonTextColor}
           intls={intls}
         />
-        <div className={styles.poweredBy}>
-          Propulsé par
-          <a href="https://devana.ai" target="_blank" rel="noreferrer">
-            Devana
-          </a>
-        </div>
+        {!hiddenWatermark && (
+          <div className={styles.poweredBy}>
+            Propulsé par{" "}
+            <a href="https://devana.ai" target="_blank" rel="noreferrer">
+              Devana
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
