@@ -16,12 +16,31 @@ module.exports = {
       },
     ],
   },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.jsx', '.css'],
+  resolve: { 
+    alias: { 
+        'react': path.resolve(__dirname, './node_modules/react') ,
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+        'assets': path.resolve(__dirname, 'assets')
+    } 
+  },
+  externals: {
+    react: {
+        commonjs: "react",
+        commonjs2: "react",
+        amd: "React",
+        root: "React"
+    },
+    "react-dom": {
+        commonjs: "react-dom",
+        commonjs2: "react-dom",
+        amd: "ReactDOM",
+        root: "ReactDOM"
+    }
   },
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/dist/',
     clean: true,
   },
   mode: 'development',
