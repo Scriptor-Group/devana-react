@@ -12,6 +12,7 @@ interface IProps {
     buttonBackgroundColor?: string;
     buttonTextColor?: string;
     intls?: IIntls;
+    hiddenWatermark?: boolean;
 }
 export declare const Conversation: React.FC<IProps>;
 export {};

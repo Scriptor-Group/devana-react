@@ -35,7 +35,7 @@ const TextField_1 = __importDefault(require("./TextField"));
 const react_markdown_preview_1 = __importDefault(require("@uiw/react-markdown-preview"));
 const config_1 = require("../config");
 const commons_1 = require("../commons");
-const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, assistantTextColor, userBackgroundColor, userTextColor, chatBackgroundColor, chatBackgroundSecondaryColor, buttonBackgroundColor, buttonTextColor, intls, }) => {
+const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, assistantTextColor, userBackgroundColor, userTextColor, chatBackgroundColor, chatBackgroundSecondaryColor, buttonBackgroundColor, buttonTextColor, intls, hiddenWatermark, }) => {
     const [tryCreateToken, setTryCreateToken] = (0, react_1.useState)(0);
     const [query, setQuery] = react_1.default.useState("");
     const [messages, setMessages] = (0, react_1.useState)([]);
@@ -44,6 +44,9 @@ const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, ass
     const refScroll = react_1.default.useRef(null);
     const [isAutoScroll, setIsAutoScroll] = react_1.default.useState(true);
     const [typingMessage, setTypingMessage] = react_1.default.useState(null);
+    const [error, setError] = react_1.default.useState(null);
+    const [isPending, setIsPending] = react_1.default.useState(false);
+    const [isTyping, setIsTyping] = react_1.default.useState(false);
     (0, react_1.useEffect)(() => {
         if (isAutoScroll && refScroll.current) {
             refScroll.current.scrollTop = refScroll.current.scrollHeight;
@@ -54,7 +57,6 @@ const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, ass
             return;
         const scroll = refScroll.current;
         const handleScroll = () => {
-            // -20px
             if (scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 20) {
                 setIsAutoScroll(true);
             }
@@ -92,7 +94,7 @@ const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, ass
         createToken();
     }, [token, tryCreateToken]);
     const handleSubmitMessage = () => {
-        if (!query)
+        if (!query || isTyping)
             return;
         setMessages((prev) => [
             ...prev,
@@ -111,10 +113,18 @@ const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, ass
                 },
             },
         ]);
+        setIsPending(true);
         setQuery("");
+        setError(null);
+        setIsTyping(true);
         sendMessage(query, {
-            onError: (error) => console.error(error),
+            onError: (error) => {
+                setError(error);
+                setIsTyping(false);
+                console.error(error);
+            },
             onFinish: (data) => {
+                setIsTyping(false);
                 getConversationHistory().then((data) => {
                     try {
                         setTypingMessage(null);
@@ -126,6 +136,7 @@ const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, ass
                 });
             },
             onMessage: (message) => {
+                setIsPending(false);
                 setTypingMessage((value) => ({
                     id: `message_${(value === null || value === void 0 ? void 0 : value.id) || messages.length + 1}`,
                     message: {
@@ -145,32 +156,47 @@ const Conversation = ({ publicKey, welcomeMessage, assistantBackgroundColor, ass
     };
     return (react_1.default.createElement("div", { className: Conversation_module_css_1.default["devana-conversation-container"], style: {
             backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
-        }, ref: refScroll },
-        react_1.default.createElement("div", { className: Conversation_module_css_1.default.messages },
-            welcomeMessage && (react_1.default.createElement("div", { className: Conversation_module_css_1.default[`message-assistant`], style: {
-                    backgroundColor: assistantBackgroundColor,
-                    color: assistantTextColor,
-                } }, welcomeMessage)),
-            [...messages, ...(typingMessage ? [typingMessage] : [])]
-                .filter((e) => e.message.content)
-                .sort((a, b) => a.created - b.created)
-                .map((m, i) => (react_1.default.createElement("div", { key: `message_${m.id}`, className: Conversation_module_css_1.default[`message-${m.message.role}`], style: m.message.role === "assistant"
-                    ? {
-                        backgroundColor: (0, commons_1.hexToTransparentHex)(assistantBackgroundColor || "#ffffff", 0.8),
+        } },
+        react_1.default.createElement("div", { ref: refScroll, className: Conversation_module_css_1.default.scrollZone },
+            react_1.default.createElement("div", { style: { height: "26px" } }),
+            react_1.default.createElement("div", { className: Conversation_module_css_1.default.messages },
+                welcomeMessage && (react_1.default.createElement("div", { className: Conversation_module_css_1.default[`message-assistant`], style: {
+                        backgroundColor: assistantBackgroundColor,
                         color: assistantTextColor,
-                    }
-                    : {
-                        backgroundColor: (0, commons_1.hexToTransparentHex)(userBackgroundColor || "#ffffff", 0.8),
-                        color: userTextColor,
+                    } }, welcomeMessage)),
+                [...messages, ...(typingMessage ? [typingMessage] : [])]
+                    .filter((e) => e.message.content)
+                    .sort((a, b) => a.created - b.created)
+                    .map((m, i) => (react_1.default.createElement("div", { key: `message_${m.id}`, className: Conversation_module_css_1.default[`message-${m.message.role}`], style: m.message.role === "assistant"
+                        ? {
+                            backgroundColor: (0, commons_1.hexToTransparentHex)(assistantBackgroundColor || "#ffffff", 0.8),
+                            color: assistantTextColor,
+                        }
+                        : {
+                            backgroundColor: (0, commons_1.hexToTransparentHex)(userBackgroundColor || "#ffffff", 0.8),
+                            color: userTextColor,
+                        } },
+                    react_1.default.createElement(react_markdown_preview_1.default, Object.assign({}, config_1.MARKDOWN_PROPS, { style: Object.assign(Object.assign({}, config_1.MARKDOWN_PROPS.style), { color: m.message.role === "assistant"
+                                ? assistantTextColor
+                                : userTextColor }), source: m.message.content }))))),
+                error && (react_1.default.createElement("div", { className: Conversation_module_css_1.default[`message-assistant`], style: {
+                        backgroundColor: (0, commons_1.hexToTransparentHex)("#ff0000", 0.8),
+                        color: "#ffffff",
+                    } }, error)),
+                isPending && (react_1.default.createElement("div", { className: Conversation_module_css_1.default[`message-assistant`], style: {
+                        backgroundColor: assistantBackgroundColor,
+                        color: assistantTextColor,
                     } },
-                react_1.default.createElement(react_markdown_preview_1.default, Object.assign({}, config_1.MARKDOWN_PROPS, { style: Object.assign(Object.assign({}, config_1.MARKDOWN_PROPS.style), { color: m.message.role === "assistant"
-                            ? assistantTextColor
-                            : userTextColor }), source: m.message.content })))))),
-        react_1.default.createElement("div", { style: { height: "50px" } }),
+                    react_1.default.createElement("div", { className: Conversation_module_css_1.default.typing },
+                        react_1.default.createElement("div", { className: Conversation_module_css_1.default.dot }),
+                        react_1.default.createElement("div", { className: Conversation_module_css_1.default.dot }),
+                        react_1.default.createElement("div", { className: Conversation_module_css_1.default.dot }))))),
+            react_1.default.createElement("div", { style: { height: "50px" } })),
         react_1.default.createElement("div", { className: Conversation_module_css_1.default["devana-input"] },
             react_1.default.createElement(TextField_1.default, { value: query, onChange: (value) => setQuery(value), onSubmit: handleSubmitMessage, buttonBackgroundColor: buttonBackgroundColor, buttonTextColor: buttonTextColor, intls: intls }),
-            react_1.default.createElement("div", { className: Conversation_module_css_1.default.poweredBy },
+            !hiddenWatermark && (react_1.default.createElement("div", { className: Conversation_module_css_1.default.poweredBy },
                 "Propuls\u00E9 par",
-                react_1.default.createElement("a", { href: "https://devana.ai", target: "_blank", rel: "noreferrer" }, "Devana")))));
+                " ",
+                react_1.default.createElement("a", { href: "https://devana.ai", target: "_blank", rel: "noreferrer" }, "Devana"))))));
 };
 exports.Conversation = Conversation;
