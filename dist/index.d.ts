@@ -1,3 +1,3 @@
-export { useChat } from "./hooks/useChat";
-export { useApi } from "./hooks/useApi";
-export { Conversation } from "./Components/Conversation";
+export * from "./hooks/useChat";
+export * from "./hooks/useApi";
+export * from "./Components/Conversation";

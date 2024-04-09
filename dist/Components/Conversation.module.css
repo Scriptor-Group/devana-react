@@ -1,0 +1,131 @@
+
+.devana-conversation-container {
+  font-family: "Nunito Sans",-apple-system,".SFNSText-Regular","San Francisco",BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  min-width: 300px;
+  border-radius: 15px;
+  box-shadow: 0 0 0px 10px rgba(255, 255, 255, 0.4);
+  min-height: 300px;
+  background-size: cover;
+  background-position: center;
+}
+
+.scrollZone {
+  height: 100%;
+  width: 100%;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.devana-conversation-container .messages {
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  
+}
+.devana-conversation-container .messages > div {
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  max-width: 70%;
+  background-color: #ffffff80;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.devana-conversation-container .messages .message-assistant {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  margin-right: auto;
+  background-color: #f1f0f0;
+}
+
+.devana-conversation-container .messages .message-user {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  margin-left: auto;
+  background-color: #f1f0f0;
+}
+
+/* fake mui bordered theme */
+.mui-textfield {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.mui-textfield input {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.devana-input {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-top: 1px solid #d9d9d9;
+  border-radius: 0px 0px 15px 15px;
+}
+
+.poweredBy {
+  opacity: 0.4;
+  font-size: 10px;
+  text-align: right;
+  position: fixed;
+  top: 0;
+  right: 0;
+  color: black;
+  background-color: rgba(255, 255, 255, 0.738);;
+  border-radius: 0px 15px 0px 15px;
+  padding: 5px 14px;
+  backdrop-filter: blur(10px);
+  font-weight: bold;
+}
+
+.poweredBy a {
+  color: black;
+  text-decoration: none;
+}
+
+.typing {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #00000080;
+}
+
+.typing .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #00000080;
+  margin-right: 5px;
+  animation: typing 1s infinite;
+}
+
+@keyframes typing {
+  0% {
+    background-color: #00000080;
+  }
+  50% {
+    background-color: #00000040;
+  }
+  100% {
+    background-color: #00000080;
+  }
+}
