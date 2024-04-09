@@ -1,9 +1,18 @@
 {
-  "include": ["src", "./styles.d.ts"], /* Include only the src directory */
-  "exclude": ["**/*.stories.ts", "**/*.test.tsx", "**/*.test.ts", "node_modules", "dist"], /* Exclude all test files and node_modules */
+  "include": [
+    "src",
+    "./styles.d.ts"
+  ], /* Include only the src directory */
+  "exclude": [
+    "**/*.stories.ts",
+    "**/*.test.tsx",
+    "**/*.test.ts",
+    "node_modules",
+    "dist"
+  ], /* Exclude all test files and node_modules */
   "compilerOptions": {
     "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "module": "commonjs" /* Specify what module code is generated. */,
+    "module": "ESNext" /* Specify what module code is generated. */,
     "declaration": true /* Generate .d.ts files from TypeScript and JavaScript files in your project. */,
     "outDir": "dist",
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,

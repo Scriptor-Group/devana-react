@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useChat } from "../hooks/useChat";
 import styles from "./Conversation.module.css";
