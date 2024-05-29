@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from "react";
-import { API_URL, API_VERSION } from "../config.js";
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const React = require("react");
+const config = require("../config.cjs");
 const useChat = ({ userToken }) => {
-  const [generating, setGenerating] = useState(false);
-  const eventSource = useRef(null);
-  useEffect(() => {
+  const [generating, setGenerating] = React.useState(false);
+  const eventSource = React.useRef(null);
+  React.useEffect(() => {
     return () => {
       if (eventSource?.current) {
         eventSource.current.close();
@@ -17,7 +19,7 @@ const useChat = ({ userToken }) => {
       return;
     }
     setGenerating(true);
-    const url = `${API_URL}${API_VERSION}/chat/conversation/public/message`;
+    const url = `${config.API_URL}${config.API_VERSION}/chat/conversation/public/message`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -90,6 +92,4 @@ const useChat = ({ userToken }) => {
   };
   return { sendMessage, generating, handleStop };
 };
-export {
-  useChat
-};
+exports.useChat = useChat;

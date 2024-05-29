@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const setTokenCookie = (token) => {
   if (typeof window === "undefined")
     return;
@@ -32,8 +34,6 @@ const hexToTransparentHex = (hex, opacity) => {
   const b = parseInt(hex.substring(5, 7), 16);
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
-export {
-  getTokenCookie,
-  hexToTransparentHex,
-  setTokenCookie
-};
+exports.getTokenCookie = getTokenCookie;
+exports.hexToTransparentHex = hexToTransparentHex;
+exports.setTokenCookie = setTokenCookie;

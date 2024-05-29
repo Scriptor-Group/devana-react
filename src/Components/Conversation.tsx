@@ -9,6 +9,7 @@ import MuiTextField from "./TextField";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { MARKDOWN_PROPS } from "../config";
 import { hexToTransparentHex } from "../commons";
+import * as flags from "country-flag-icons/string/3x2";
 
 interface IProps {
   publicKey: string;
@@ -52,6 +53,7 @@ export const Conversation: React.FC<IProps> = ({
   const [error, setError] = React.useState<string | null>(null);
   const [isPending, setIsPending] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
+  const [lang, setLang] = useState("FR");
 
   useEffect(() => {
     if (isAutoScroll && refScroll.current) {
@@ -167,6 +169,25 @@ export const Conversation: React.FC<IProps> = ({
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
     >
+      <div className={styles["lang-selector"]}>
+        {["FR", "US"]
+          .sort((a, b) => (lang === a ? -1 : lang === b ? 1 : 0))
+          .map((l) => (
+            <div
+              key={l}
+              onClick={() => setLang(l)}
+              style={{
+                opacity: l === lang ? 1 : 0.5,
+              }}
+            >
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: flags[l as keyof typeof flags],
+                }}
+              />
+            </div>
+          ))}
+      </div>
       <div ref={refScroll} className={styles.scrollZone}>
         <div style={{ height: "26px" }} />
         <div className={styles.messages}>

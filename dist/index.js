@@ -1,3 +1,8 @@
-export * from "./hooks/useChat";
-export * from "./hooks/useApi";
-export * from "./Components/Conversation";
+import { useChat } from "./hooks/useChat.js";
+import { useApi } from "./hooks/useApi.js";
+import { Conversation } from "./Components/Conversation.js";
+export {
+  Conversation,
+  useApi,
+  useChat
+};

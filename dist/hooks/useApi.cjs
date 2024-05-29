@@ -1,15 +1,17 @@
-import { useState } from "react";
-import { API_URL, API_VERSION } from "../config.js";
-import { getTokenCookie, setTokenCookie } from "../commons.js";
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const React = require("react");
+const config = require("../config.cjs");
+const commons = require("../commons.cjs");
 const useApi = (publicKey, options) => {
-  const [token, setToken] = useState(
-    options?.token || getTokenCookie() || null
+  const [token, setToken] = React.useState(
+    options?.token || commons.getTokenCookie() || null
   );
   const createToken = async () => {
     if (!publicKey)
       return null;
     const route = "/chat/conversation/public/message/token";
-    const url = `${API_URL}${API_VERSION}${route}`;
+    const url = `${config.API_URL}${config.API_VERSION}${route}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -20,7 +22,7 @@ const useApi = (publicKey, options) => {
     const data = await response.json();
     const _token = data?.token;
     if (_token) {
-      setTokenCookie(_token);
+      commons.setTokenCookie(_token);
       setToken(_token);
     }
     return _token;
@@ -29,7 +31,7 @@ const useApi = (publicKey, options) => {
     if (!token)
       return [];
     const route = `/chat/conversation/public/messages/:token`;
-    const url = `${API_URL}${API_VERSION}${route.replace(":token", token || "")}`;
+    const url = `${config.API_URL}${config.API_VERSION}${route.replace(":token", token || "")}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -45,6 +47,4 @@ const useApi = (publicKey, options) => {
     getConversationHistory
   };
 };
-export {
-  useApi
-};
+exports.useApi = useApi;

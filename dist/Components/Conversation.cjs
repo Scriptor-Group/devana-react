@@ -1,13 +1,32 @@
-import { jsxs, jsx } from "react/jsx-runtime";
-import React, { useState, useEffect } from "react";
-import { useChat } from "../hooks/useChat.js";
-import styles from "./Conversation.module.css.js";
-import { useApi } from "../hooks/useApi.js";
-import MuiTextField from "./TextField.js";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { MARKDOWN_PROPS } from "../config.js";
-import { hexToTransparentHex } from "../commons.js";
-import * as flags from "country-flag-icons/string/3x2";
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const jsxRuntime = require("react/jsx-runtime");
+const React = require("react");
+const useChat = require("../hooks/useChat.cjs");
+const Conversation_module = require("./Conversation.module.css.cjs");
+const useApi = require("../hooks/useApi.cjs");
+const TextField = require("./TextField.cjs");
+const MarkdownPreview = require("@uiw/react-markdown-preview");
+const config = require("../config.cjs");
+const commons = require("../commons.cjs");
+const flags = require("country-flag-icons/string/3x2");
+function _interopNamespaceDefault(e) {
+  const n = Object.create(null, { [Symbol.toStringTag]: { value: "Module" } });
+  if (e) {
+    for (const k in e) {
+      if (k !== "default") {
+        const d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: () => e[k]
+        });
+      }
+    }
+  }
+  n.default = e;
+  return Object.freeze(n);
+}
+const flags__namespace = /* @__PURE__ */ _interopNamespaceDefault(flags);
 const Conversation = ({
   publicKey,
   welcomeMessage,
@@ -22,11 +41,11 @@ const Conversation = ({
   intls,
   hiddenWatermark
 }) => {
-  const [tryCreateToken, setTryCreateToken] = useState(0);
+  const [tryCreateToken, setTryCreateToken] = React.useState(0);
   const [query, setQuery] = React.useState("");
-  const [messages, setMessages] = useState([]);
-  const { token, createToken, getConversationHistory } = useApi(publicKey, {});
-  const { sendMessage } = useChat({ userToken: token });
+  const [messages, setMessages] = React.useState([]);
+  const { token, createToken, getConversationHistory } = useApi.useApi(publicKey, {});
+  const { sendMessage } = useChat.useChat({ userToken: token });
   const refScroll = React.useRef(null);
   const [isAutoScroll, setIsAutoScroll] = React.useState(true);
   const [typingMessage, setTypingMessage] = React.useState(
@@ -35,13 +54,13 @@ const Conversation = ({
   const [error, setError] = React.useState(null);
   const [isPending, setIsPending] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
-  const [lang, setLang] = useState("FR");
-  useEffect(() => {
+  const [lang, setLang] = React.useState("FR");
+  React.useEffect(() => {
     if (isAutoScroll && refScroll.current) {
       refScroll.current.scrollTop = refScroll.current.scrollHeight;
     }
   }, [messages, typingMessage, query]);
-  useEffect(() => {
+  React.useEffect(() => {
     if (!refScroll.current)
       return;
     const scroll = refScroll.current;
@@ -55,7 +74,7 @@ const Conversation = ({
     scroll.addEventListener("scroll", handleScroll);
     return () => scroll.removeEventListener("scroll", handleScroll);
   }, [refScroll]);
-  useEffect(() => {
+  React.useEffect(() => {
     if (!token)
       return;
     getConversationHistory().then((data) => {
@@ -65,13 +84,13 @@ const Conversation = ({
       }
     });
   }, [token]);
-  useEffect(() => {
+  React.useEffect(() => {
     if (token)
       return;
     setTryCreateToken(0);
     createToken();
   }, [publicKey]);
-  useEffect(() => {
+  React.useEffect(() => {
     if (token)
       return;
     if (tryCreateToken > 1)
@@ -138,39 +157,39 @@ const Conversation = ({
       }
     });
   };
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsxRuntime.jsxs(
     "div",
     {
-      className: styles["devana-conversation-container"],
+      className: Conversation_module.default["devana-conversation-container"],
       style: {
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`
       },
       children: [
-        /* @__PURE__ */ jsx("div", { className: styles["lang-selector"], children: ["FR", "US"].sort((a, b) => lang === a ? -1 : lang === b ? 1 : 0).map((l) => /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxRuntime.jsx("div", { className: Conversation_module.default["lang-selector"], children: ["FR", "US"].sort((a, b) => lang === a ? -1 : lang === b ? 1 : 0).map((l) => /* @__PURE__ */ jsxRuntime.jsx(
           "div",
           {
             onClick: () => setLang(l),
             style: {
               opacity: l === lang ? 1 : 0.5
             },
-            children: /* @__PURE__ */ jsx(
+            children: /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
                 dangerouslySetInnerHTML: {
-                  __html: flags[l]
+                  __html: flags__namespace[l]
                 }
               }
             )
           },
           l
         )) }),
-        /* @__PURE__ */ jsxs("div", { ref: refScroll, className: styles.scrollZone, children: [
-          /* @__PURE__ */ jsx("div", { style: { height: "26px" } }),
-          /* @__PURE__ */ jsxs("div", { className: styles.messages, children: [
-            welcomeMessage && /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { ref: refScroll, className: Conversation_module.default.scrollZone, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("div", { style: { height: "26px" } }),
+          /* @__PURE__ */ jsxRuntime.jsxs("div", { className: Conversation_module.default.messages, children: [
+            welcomeMessage && /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
-                className: styles[`message-assistant`],
+                className: Conversation_module.default[`message-assistant`],
                 style: {
                   backgroundColor: assistantBackgroundColor,
                   color: assistantTextColor
@@ -178,30 +197,30 @@ const Conversation = ({
                 children: welcomeMessage
               }
             ),
-            [...messages, ...typingMessage ? [typingMessage] : []].filter((e) => e.message.content).sort((a, b) => a.created - b.created).map((m, i) => /* @__PURE__ */ jsx(
+            [...messages, ...typingMessage ? [typingMessage] : []].filter((e) => e.message.content).sort((a, b) => a.created - b.created).map((m, i) => /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
-                className: styles[`message-${m.message.role}`],
+                className: Conversation_module.default[`message-${m.message.role}`],
                 style: m.message.role === "assistant" ? {
-                  backgroundColor: hexToTransparentHex(
+                  backgroundColor: commons.hexToTransparentHex(
                     assistantBackgroundColor || "#ffffff",
                     0.8
                   ),
                   color: assistantTextColor
                 } : {
-                  backgroundColor: hexToTransparentHex(
+                  backgroundColor: commons.hexToTransparentHex(
                     userBackgroundColor || "#ffffff",
                     0.8
                   ),
                   color: userTextColor
                 },
-                children: /* @__PURE__ */ jsx(
+                children: /* @__PURE__ */ jsxRuntime.jsx(
                   MarkdownPreview,
                   {
                     ...{
-                      ...MARKDOWN_PROPS,
+                      ...config.MARKDOWN_PROPS,
                       style: {
-                        ...MARKDOWN_PROPS.style,
+                        ...config.MARKDOWN_PROPS.style,
                         color: m.message.role === "assistant" ? assistantTextColor : userTextColor
                       }
                     },
@@ -211,38 +230,38 @@ const Conversation = ({
               },
               `message_${m.id}`
             )),
-            error && /* @__PURE__ */ jsx(
+            error && /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
-                className: styles[`message-assistant`],
+                className: Conversation_module.default[`message-assistant`],
                 style: {
-                  backgroundColor: hexToTransparentHex("#ff0000", 0.8),
+                  backgroundColor: commons.hexToTransparentHex("#ff0000", 0.8),
                   color: "#ffffff"
                 },
                 children: error
               }
             ),
-            isPending && /* @__PURE__ */ jsx(
+            isPending && /* @__PURE__ */ jsxRuntime.jsx(
               "div",
               {
-                className: styles[`message-assistant`],
+                className: Conversation_module.default[`message-assistant`],
                 style: {
                   backgroundColor: assistantBackgroundColor,
                   color: assistantTextColor
                 },
-                children: /* @__PURE__ */ jsxs("div", { className: styles.typing, children: [
-                  /* @__PURE__ */ jsx("div", { className: styles.dot }),
-                  /* @__PURE__ */ jsx("div", { className: styles.dot }),
-                  /* @__PURE__ */ jsx("div", { className: styles.dot })
+                children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: Conversation_module.default.typing, children: [
+                  /* @__PURE__ */ jsxRuntime.jsx("div", { className: Conversation_module.default.dot }),
+                  /* @__PURE__ */ jsxRuntime.jsx("div", { className: Conversation_module.default.dot }),
+                  /* @__PURE__ */ jsxRuntime.jsx("div", { className: Conversation_module.default.dot })
                 ] })
               }
             )
           ] }),
-          /* @__PURE__ */ jsx("div", { style: { height: "50px" } })
+          /* @__PURE__ */ jsxRuntime.jsx("div", { style: { height: "50px" } })
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: styles["devana-input"], children: [
-          /* @__PURE__ */ jsx(
-            MuiTextField,
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { className: Conversation_module.default["devana-input"], children: [
+          /* @__PURE__ */ jsxRuntime.jsx(
+            TextField,
             {
               value: query,
               onChange: (value) => setQuery(value),
@@ -252,16 +271,14 @@ const Conversation = ({
               intls
             }
           ),
-          !hiddenWatermark && /* @__PURE__ */ jsxs("div", { className: styles.poweredBy, children: [
+          !hiddenWatermark && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: Conversation_module.default.poweredBy, children: [
             "Propulsé par",
             " ",
-            /* @__PURE__ */ jsx("a", { href: "https://devana.ai", target: "_blank", rel: "noreferrer", children: "Devana" })
+            /* @__PURE__ */ jsxRuntime.jsx("a", { href: "https://devana.ai", target: "_blank", rel: "noreferrer", children: "Devana" })
           ] })
         ] })
       ]
     }
   );
 };
-export {
-  Conversation
-};
+exports.Conversation = Conversation;

@@ -1,5 +1,6 @@
-import { jsxs, jsx } from "react/jsx-runtime";
-import styles from "./TextField.module.css.js";
+"use strict";
+const jsxRuntime = require("react/jsx-runtime");
+const TextField_module = require("./TextField.module.css.cjs");
 const MuiTextField = ({
   value,
   onChange,
@@ -8,16 +9,16 @@ const MuiTextField = ({
   buttonTextColor,
   intls
 }) => {
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsxRuntime.jsxs(
     "form",
     {
       onSubmit: (e) => {
         e.preventDefault();
         onSubmit();
       },
-      className: styles.container,
+      className: TextField_module.default.container,
       children: [
-        /* @__PURE__ */ jsx("div", { style: { flexGrow: 1 }, children: /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxRuntime.jsx("div", { style: { flexGrow: 1 }, children: /* @__PURE__ */ jsxRuntime.jsx(
           "input",
           {
             type: "text",
@@ -25,7 +26,7 @@ const MuiTextField = ({
             placeholder: intls?.placeholder || "Entrez votre question",
             value,
             onChange: (e) => onChange(e.target.value),
-            className: styles.input,
+            className: TextField_module.default.input,
             maxLength: 500,
             multiple: true,
             required: true,
@@ -35,11 +36,11 @@ const MuiTextField = ({
             spellCheck: "false"
           }
         ) }),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxRuntime.jsx(
           "button",
           {
             type: "submit",
-            className: styles.button,
+            className: TextField_module.default.button,
             style: {
               backgroundColor: buttonBackgroundColor,
               color: buttonTextColor
@@ -51,6 +52,4 @@ const MuiTextField = ({
     }
   );
 };
-export {
-  MuiTextField as default
-};
+module.exports = MuiTextField;

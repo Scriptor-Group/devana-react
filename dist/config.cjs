@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const API_URL = `https://api.devana.ai/`;
 const API_VERSION = `v1`;
 const MARKDOWN_PROPS = {
@@ -20,8 +22,6 @@ const MARKDOWN_PROPS = {
    */
   skipHtml: true
 };
-export {
-  API_URL,
-  API_VERSION,
-  MARKDOWN_PROPS
-};
+exports.API_URL = API_URL;
+exports.API_VERSION = API_VERSION;
+exports.MARKDOWN_PROPS = MARKDOWN_PROPS;
