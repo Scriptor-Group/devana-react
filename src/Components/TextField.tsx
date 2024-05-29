@@ -1,21 +1,26 @@
 import React from "react";
 import styles from "./TextField.module.css";
 import { IIntls } from "../types";
+import ResetChatIcon from "../assets/reset-chat";
 
 const MuiTextField: React.FC<{
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  onReset: () => void;
   buttonBackgroundColor?: string;
   buttonTextColor?: string;
   intls?: IIntls;
+  showResetButton?: boolean;
 }> = ({
   value,
   onChange,
   onSubmit,
+  onReset,
   buttonBackgroundColor,
   buttonTextColor,
   intls,
+  showResetButton,
 }) => {
   return (
     <form
@@ -25,6 +30,11 @@ const MuiTextField: React.FC<{
       }}
       className={styles.container}
     >
+      {showResetButton && (
+        <div>
+          <ResetChatIcon onClick={onReset} />
+        </div>
+      )}
       <div style={{ flexGrow: 1 }}>
         <input
           type="text"

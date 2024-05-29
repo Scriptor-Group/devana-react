@@ -23,8 +23,8 @@ export const useApi = (publicKey: string, options?: IOptions) => {
    * If the token is successfully retrieved, it is also stored in a cookie.
    * @returns A Promise that resolves to the token string.
    */
-  const createToken = async (): Promise<string | null> => {
-    if (!publicKey) return null;
+  const createToken = async (force?: boolean): Promise<string | null> => {
+    if (!force && !publicKey) return null;
 
     const route = "/chat/conversation/public/message/token";
     const url = `${API_URL}${API_VERSION}${route}`;
