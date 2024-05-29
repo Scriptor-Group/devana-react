@@ -10,6 +10,6 @@ export interface IOptions {
  */
 export declare const useApi: (publicKey: string, options?: IOptions) => {
     token: string | null;
-    createToken: () => Promise<string | null>;
+    createToken: (force?: boolean) => Promise<string | null>;
     getConversationHistory: () => Promise<IMessage[]>;
 };

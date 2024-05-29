@@ -1,13 +1,16 @@
 "use strict";
 const jsxRuntime = require("react/jsx-runtime");
 const TextField_module = require("./TextField.module.css.cjs");
+const resetChat = require("../assets/reset-chat.cjs");
 const MuiTextField = ({
   value,
   onChange,
   onSubmit,
+  onReset,
   buttonBackgroundColor,
   buttonTextColor,
-  intls
+  intls,
+  showResetButton
 }) => {
   return /* @__PURE__ */ jsxRuntime.jsxs(
     "form",
@@ -18,6 +21,7 @@ const MuiTextField = ({
       },
       className: TextField_module.default.container,
       children: [
+        showResetButton && /* @__PURE__ */ jsxRuntime.jsx("div", { children: /* @__PURE__ */ jsxRuntime.jsx(resetChat, { onClick: onReset }) }),
         /* @__PURE__ */ jsxRuntime.jsx("div", { style: { flexGrow: 1 }, children: /* @__PURE__ */ jsxRuntime.jsx(
           "input",
           {

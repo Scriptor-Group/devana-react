@@ -126,6 +126,7 @@ const Conversation = ({
       onError: (error2) => {
         setError(error2);
         setIsTyping(false);
+        setIsPending(false);
         console.error(error2);
       },
       onFinish: (data) => {
@@ -156,6 +157,12 @@ const Conversation = ({
         }));
       }
     });
+  };
+  const handleResetConversation = () => {
+    setMessages([]);
+    setTypingMessage(null);
+    setQuery("");
+    createToken(true);
   };
   return /* @__PURE__ */ jsxRuntime.jsxs(
     "div",
@@ -266,6 +273,8 @@ const Conversation = ({
               value: query,
               onChange: (value) => setQuery(value),
               onSubmit: handleSubmitMessage,
+              onReset: handleResetConversation,
+              showResetButton: !!messages.length,
               buttonBackgroundColor,
               buttonTextColor,
               intls

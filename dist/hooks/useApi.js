@@ -5,8 +5,8 @@ const useApi = (publicKey, options) => {
   const [token, setToken] = useState(
     options?.token || getTokenCookie() || null
   );
-  const createToken = async () => {
-    if (!publicKey)
+  const createToken = async (force) => {
+    if (!force && !publicKey)
       return null;
     const route = "/chat/conversation/public/message/token";
     const url = `${API_URL}${API_VERSION}${route}`;

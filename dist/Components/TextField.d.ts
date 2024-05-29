@@ -4,8 +4,10 @@ declare const MuiTextField: React.FC<{
     value: string;
     onChange: (value: string) => void;
     onSubmit: () => void;
+    onReset: () => void;
     buttonBackgroundColor?: string;
     buttonTextColor?: string;
     intls?: IIntls;
+    showResetButton?: boolean;
 }>;
 export default MuiTextField;

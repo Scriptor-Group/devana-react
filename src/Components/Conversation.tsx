@@ -129,6 +129,7 @@ export const Conversation: React.FC<IProps> = ({
       onError: (error) => {
         setError(error);
         setIsTyping(false);
+        setIsPending(false);
         console.error(error);
       },
       onFinish: (data) => {
@@ -160,6 +161,13 @@ export const Conversation: React.FC<IProps> = ({
         }));
       },
     });
+  };
+
+  const handleResetConversation = () => {
+    setMessages([]);
+    setTypingMessage(null);
+    setQuery("");
+    createToken(true);
   };
 
   return (
@@ -276,6 +284,8 @@ export const Conversation: React.FC<IProps> = ({
           value={query}
           onChange={(value) => setQuery(value)}
           onSubmit={handleSubmitMessage}
+          onReset={handleResetConversation}
+          showResetButton={!!messages.length}
           buttonBackgroundColor={buttonBackgroundColor}
           buttonTextColor={buttonTextColor}
           intls={intls}

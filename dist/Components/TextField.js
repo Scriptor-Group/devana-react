@@ -1,12 +1,15 @@
 import { jsxs, jsx } from "react/jsx-runtime";
 import styles from "./TextField.module.css.js";
+import ResetChatIcon from "../assets/reset-chat.js";
 const MuiTextField = ({
   value,
   onChange,
   onSubmit,
+  onReset,
   buttonBackgroundColor,
   buttonTextColor,
-  intls
+  intls,
+  showResetButton
 }) => {
   return /* @__PURE__ */ jsxs(
     "form",
@@ -17,6 +20,7 @@ const MuiTextField = ({
       },
       className: styles.container,
       children: [
+        showResetButton && /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(ResetChatIcon, { onClick: onReset }) }),
         /* @__PURE__ */ jsx("div", { style: { flexGrow: 1 }, children: /* @__PURE__ */ jsx(
           "input",
           {
