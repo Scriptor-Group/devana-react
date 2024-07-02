@@ -45,7 +45,7 @@ Le composant `Conversation` accepte les props suivantes :
 Pour utiliser le composant `Conversation`, vous devez l'importer dans votre fichier et le rendre en lui passant les props nécessaires. Voici un exemple d'utilisation :
 
 ```jsx
-import { Conversation } from ".devana-react";
+import { Conversation } from "devana-react";
 
 function App() {
   return (
