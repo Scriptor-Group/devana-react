@@ -94,6 +94,14 @@ const meta = {
         },
       },
     },
+    onEvent: {
+      description: "Event handler for chat events",
+      table: {
+        type: {
+          summary: "function",
+        },
+      },
+    },
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // args: { onClick: fn() },
@@ -105,7 +113,13 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary: Story = {
   args: {
-    publicKey: "",
+    publicKey: "8ceb2de0-63d2-4d7d-a97d-d66a328b18f6",
+    welcomeMessage: {
+      fr: "Bonjour, je suis une IA conversationnelle",
+      us: "Hello, I am a conversational AI",
+    },
+    displayActions: true,
+    displayTools: true,
   },
 };
 

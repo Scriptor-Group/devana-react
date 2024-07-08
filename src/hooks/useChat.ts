@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { API_URL, API_VERSION } from "../config";
+import { IMessage, TFiabilityMessage } from "../types";
 
 /**
  * Custom hook for handling chat functionality.
@@ -9,6 +10,8 @@ import { API_URL, API_VERSION } from "../config";
  */
 export const useChat = ({ userToken }: { userToken?: string | null }) => {
   const [generating, setGenerating] = useState(false);
+  const [tools, setTools] = useState<string[]>([]);
+  const [activeTool, setActiveTool] = useState<string | null>(null);
   const eventSource = useRef<EventSource | null>(null);
 
   useEffect(() => {
@@ -43,6 +46,7 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
     }
 
     setGenerating(true);
+    setTools([]);
 
     const url = `${API_URL}${API_VERSION}/chat/conversation/public/message`;
 
@@ -84,15 +88,27 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
           const { done, value } = await reader.read(); // Read the next chunk
           if (done) break; // Exit the loop if there are no more chunks
           const token = new TextDecoder().decode(value); // Convert the chunk to text
-          if (token.includes("DONE")) {
-            console.log("data", fullMessage);
-            options.onFinish && options.onFinish({ text: fullMessage });
-            break;
-          }
 
-          fullMessage += token;
-          console.log("data", fullMessage);
-          options.onMessage && options.onMessage(fullMessage);
+          if (token) {
+            if (token.startsWith("[tool:start")) {
+              const toolName = token.match(/\[tool:start:(.*)\]/)?.[1];
+              if (toolName) {
+                setActiveTool(toolName);
+                setTools((t) => [...t, toolName]);
+              }
+            } else if (token.startsWith("[tool:end")) {
+              // Handle tool end if needed
+            } else {
+              if (token.includes("DONE")) {
+                options.onFinish && options.onFinish({ text: fullMessage });
+                break;
+              }
+
+              fullMessage += token;
+
+              options.onMessage && options.onMessage(fullMessage);
+            }
+          }
         } catch (error) {
           if (error instanceof Error && error.name === "AbortError") {
             console.log("Aborted");
@@ -125,5 +141,53 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
     setGenerating(false);
   };
 
-  return { sendMessage, generating, handleStop };
+  const handleFiabilityMessageIA = async (
+    message: IMessage,
+    fiability: TFiabilityMessage,
+    options?: {
+      onError?: (error: string) => void;
+    },
+  ) => {
+    if (!message.message_id) return;
+    const url = `${API_URL}${API_VERSION}/chat/conversation/public/message/fiability`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message_id: message.message_id,
+          client_token: userToken,
+          fiability: fiability,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error(`Error: ${response.status} - ${response.statusText}`);
+        const errorResponse = await response.json();
+        console.error(`Error details: ${errorResponse.error}`);
+        return;
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      options?.onError &&
+        options?.onError(
+          error instanceof Error ? error.message : "An error occurred",
+        );
+      console.error(error);
+    }
+  };
+
+  return {
+    sendMessage,
+    generating,
+    handleStop,
+    handleFiabilityMessageIA,
+    tools,
+    activeTool,
+  };
 };

@@ -37,6 +37,7 @@ export const useApi = (publicKey: string, options?: IOptions) => {
     });
 
     const data = await response.json();
+    console.log("data", data);
     const _token = data?.token;
 
     if (_token) {

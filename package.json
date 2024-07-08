@@ -41,7 +41,7 @@
     "build:rl": "rollup -c --bundleConfigAsCjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepublish": "yarn build",
+    "": "yarn build",
     "test": "jest"
   },
   "author": "Scriptor Artis",
@@ -84,6 +84,7 @@
   },
   "dependencies": {
     "@uiw/react-markdown-preview": "^5.1.1",
+    "classnames": "^2.5.1",
     "country-flag-icons": "^1.5.11"
   },
   "resolutions": {
