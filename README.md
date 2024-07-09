@@ -41,7 +41,7 @@ Le composant `Conversation` accepte les props suivantes :
 - `intls` (optionnel) : Un objet contenant les traductions pour les différents éléments du composant.
 - `onEvent`: (optionnel) : Une fonction qui est appelée lorsque l'événement est déclenché. Les événements disponibles sont:
   - `messageSent`: lorsque l'utilisateur a envoyé un message.
-  - `messageReceived`: lorsque l'assistant a reçu un message.
+  - `messageReceived`: lorsque un message a été reçu de l'assistant.
   - `onError`: lorsqu'une erreur est rencontrée lors de l'envoi du message.
 - `displayActions`: (optionnel) : Si `true`, affiche les boutons d'actions pour la fiabilité du message.
 - `displayTools`: (optionnel) : Si `true`, affiche les outils de l'assistant en cours d'exécution.
