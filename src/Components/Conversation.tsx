@@ -340,7 +340,7 @@ export const Conversation: React.FC<IProps> = ({
                           }}
                           className={styles["btn-container-fiability"]}
                         >
-                          {fiability_key === "BAD" ? (
+                          {fiability_key === EnumFiabilityMessage.BAD ? (
                             <ThumbDownIcon
                               active={m.fiability === fiability_key}
                             />

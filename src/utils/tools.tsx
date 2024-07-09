@@ -7,6 +7,7 @@ import DalleTools from "../assets/tools/Dalle";
 import FolderOpenTools from "../assets/tools/FolderOpen";
 import FindPageTools from "../assets/tools/FindPage";
 import FolderCopyTools from "../assets/tools/FolderCopy";
+import GoogleIcon from "../assets/tools/Google";
 
 export const toolsIcons = (toolName: string): JSX.Element => {
   if (toolName.startsWith("a-")) {
@@ -18,9 +19,7 @@ export const toolsIcons = (toolName: string): JSX.Element => {
       return <GlobalSearch />;
       break;
     case "google":
-      return (
-        <img src="./assets/google.png" alt="google" width={24} height={24} />
-      );
+      return <GoogleIcon />;
       break;
     case "website":
       return <WebTools />;
