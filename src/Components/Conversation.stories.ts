@@ -113,7 +113,7 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary: Story = {
   args: {
-    publicKey: "",
+    publicKey: "8ceb2de0-63d2-4d7d-a97d-d66a328b18f6",
     welcomeMessage: {
       fr: "Bonjour, je suis une IA conversationnelle",
       us: "Hello, I am a conversational AI",
