@@ -186,11 +186,11 @@ export const Conversation: React.FC<IProps> = ({
         });
       },
       onMessage: (message) => {
-        if (displayTools) {
-          setIsPending(false);
-        }
-
-        if (message.trim().length > 0 && !displayTools) {
+        if (!displayTools) {
+          if (message.trim().length > 0) {
+            setIsPending(false);
+          }
+        } else {
           setIsPending(false);
         }
 
