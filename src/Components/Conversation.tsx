@@ -191,7 +191,6 @@ export const Conversation: React.FC<IProps> = ({
         }
 
         if (message.trim().length > 0 && !displayTools) {
-          console.log("message.trim().length > 0 && !displayTools", message);
           setIsPending(false);
         }
 
@@ -240,8 +239,6 @@ export const Conversation: React.FC<IProps> = ({
       ),
     );
   };
-
-  console.log("messages", messages);
 
   return (
     <div

@@ -6,8 +6,7 @@
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
-  /* min-width: 300px; */
-  min-width: 600px;
+  min-width: 300px;
   border-radius: 15px;
   box-shadow: 0 0 0px 10px rgba(255, 255, 255, 0.4);
   min-height: 300px;
