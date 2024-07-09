@@ -29,7 +29,7 @@ import { Conversation, useChat, useApi } from "devana-react";
 Le composant `Conversation` accepte les props suivantes :
 
 - `publicKey` (obligatoire) : La clé publique utilisée pour l'authentification avec l'API.
-- `welcomeMessage` (optionnel) : Un message de bienvenue à afficher au début de la conversation.
+- `welcomeMessage` (optionnel) : Un message de bienvenue à afficher au début de la conversation selon le langage sélectionné.
 - `assistantBackgroundColor` (optionnel) : La couleur de fond des messages de l'assistant.
 - `assistantTextColor` (optionnel) : La couleur du texte des messages de l'assistant.
 - `userBackgroundColor` (optionnel) : La couleur de fond des messages de l'utilisateur.
@@ -39,6 +39,12 @@ Le composant `Conversation` accepte les props suivantes :
 - `buttonBackgroundColor` (optionnel) : La couleur de fond du bouton d'envoi.
 - `buttonTextColor` (optionnel) : La couleur du texte du bouton d'envoi.
 - `intls` (optionnel) : Un objet contenant les traductions pour les différents éléments du composant.
+- `onEvent`: (optionnel) : Une fonction qui est appelée lorsque l'événement est déclenché. Les événements disponibles sont:
+  - `messageSent`: lorsque l'utilisateur a envoyé un message.
+  - `messageReceived`: lorsque l'assistant a reçu un message.
+  - `onError`: lorsqu'une erreur est rencontrée lors de l'envoi du message.
+- `displayActions`: (optionnel) : Si `true`, affiche les boutons d'actions pour la fiabilité du message.
+- `displayTools`: (optionnel) : Si `true`, affiche les outils de l'assistant en cours d'exécution.
 
 ## Utilisation
 
@@ -52,7 +58,10 @@ function App() {
     <div>
       <Conversation
         publicKey="votre_clé_publique"
-        welcomeMessage="Bienvenue dans la conversation !"
+        welcomeMessage={{
+          fr: "Bienvenue dans la conversation !",
+          us: "Welcome to the conversation!",
+        }}
         assistantBackgroundColor="#f0f0f0"
         assistantTextColor="#333333"
         userBackgroundColor="#e0e0e0"
@@ -61,6 +70,11 @@ function App() {
         chatBackgroundSecondaryColor="#f5f5f5"
         buttonBackgroundColor="#007bff"
         buttonTextColor="#ffffff"
+        onEvent={(eventName, payload) => {
+          console.log(eventName, payload);
+        }}
+        displayActions
+        displayTools
       />
     </div>
   );
@@ -78,6 +92,8 @@ function App() {
 - Permet de personnaliser les couleurs de fond de la zone de conversation.
 - Permet de personnaliser les couleurs du bouton d'envoi.
 - Prend en charge les traductions via l'objet `intls`.
+- Permet d'afficher les boutons d'actions pour la fiabilité du message.
+- Permet d'afficher les outils de l'assistant en cours d'exécution.
 
 ## Chat API
 
