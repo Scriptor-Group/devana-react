@@ -40,3 +40,5 @@ export enum EnumLangChat {
 
 export type TLang = EnumLangChat.fr | EnumLangChat.us;
 export type TLangKey = keyof typeof EnumLangChat;
+
+export type ITheme = "light" | "dark";

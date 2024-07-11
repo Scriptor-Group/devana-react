@@ -13,6 +13,7 @@ import {
   TLang,
   EnumLangChat,
   TLangKey,
+  ITheme,
 } from "../types";
 import MuiTextField from "./TextField";
 import MarkdownPreview from "@uiw/react-markdown-preview";
@@ -43,6 +44,7 @@ interface IProps {
   onEvent?: (eventName: TEventName, payload: any) => void;
   displayActions?: boolean;
   displayTools?: boolean;
+  theme?: ITheme;
 }
 
 export const Conversation: React.FC<IProps> = ({
@@ -61,6 +63,7 @@ export const Conversation: React.FC<IProps> = ({
   onEvent,
   displayActions,
   displayTools,
+  theme,
 }) => {
   const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
@@ -242,7 +245,9 @@ export const Conversation: React.FC<IProps> = ({
 
   return (
     <div
-      className={styles["devana-conversation-container"]}
+      className={classNames(styles["devana-conversation-container"], {
+        [styles["dark"] as string]: theme === "dark",
+      })}
       style={{
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
@@ -446,6 +451,7 @@ export const Conversation: React.FC<IProps> = ({
           buttonBackgroundColor={buttonBackgroundColor}
           buttonTextColor={buttonTextColor}
           intls={intls}
+          theme={theme}
         />
         {!hiddenWatermark && (
           <div className={styles.poweredBy}>

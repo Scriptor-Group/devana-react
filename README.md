@@ -45,6 +45,7 @@ Le composant `Conversation` accepte les props suivantes :
   - `onError`: lorsqu'une erreur est rencontrée lors de l'envoi du message.
 - `displayActions`: (optionnel) : Si `true`, affiche les boutons d'actions pour la fiabilité du message.
 - `displayTools`: (optionnel) : Si `true`, affiche les outils de l'assistant en cours d'exécution.
+- `theme`: (optionnel) : Le thème du composant. Les valeurs possibles sont "light" et "dark". Par défaut, le thème est "light".
 
 ## Utilisation
 
@@ -75,6 +76,7 @@ function App() {
         }}
         displayActions
         displayTools
+        theme="dark"
       />
     </div>
   );
@@ -94,6 +96,7 @@ function App() {
 - Prend en charge les traductions via l'objet `intls`.
 - Permet d'afficher les boutons d'actions pour la fiabilité du message.
 - Permet d'afficher les outils de l'assistant en cours d'exécution.
+- Permet de personnaliser le thème du composant.
 
 ## Chat API
 

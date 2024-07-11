@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./TextField.module.css";
-import { IIntls } from "../types";
+import { IIntls, ITheme } from "../types";
 import ResetChatIcon from "../assets/reset-chat";
+import classNames from "classnames";
 
 const MuiTextField: React.FC<{
   value: string;
@@ -12,6 +13,7 @@ const MuiTextField: React.FC<{
   buttonTextColor?: string;
   intls?: IIntls;
   showResetButton?: boolean;
+  theme?: ITheme;
 }> = ({
   value,
   onChange,
@@ -21,6 +23,7 @@ const MuiTextField: React.FC<{
   buttonTextColor,
   intls,
   showResetButton,
+  theme,
 }) => {
   return (
     <form
@@ -28,7 +31,9 @@ const MuiTextField: React.FC<{
         e.preventDefault();
         onSubmit();
       }}
-      className={styles.container}
+      className={classNames(styles.container, {
+        [styles.dark as string]: theme === "dark",
+      })}
     >
       {showResetButton && (
         <div>
