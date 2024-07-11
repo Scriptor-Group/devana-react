@@ -1,6 +1,6 @@
 {
   "name": "devana-react",
-  "version": "1.0.22",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/index.js",
   "type": "module",
@@ -84,6 +84,7 @@
   },
   "dependencies": {
     "@uiw/react-markdown-preview": "^5.1.1",
+    "classnames": "^2.5.1",
     "country-flag-icons": "^1.5.11"
   },
   "resolutions": {

@@ -1,0 +1,18 @@
+.button-thumb-down-icon {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    background-color: #e8eaed;
+    width: 18px;
+    height: 18px;
+    fill: #000;
+}
+
+
+.button-thumb-down-icon-active {
+    background-color: #000;
+    fill: #fff;
+}
