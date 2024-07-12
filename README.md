@@ -48,6 +48,18 @@ Le composant `Conversation` accepte les props suivantes :
 - `theme`: (optionnel) : Le thème du composant. Les valeurs possibles sont "light" et "dark". Par défaut, le thème est "light".
 - `scrollHeightChat`: (optionnel) : La hauteur de la zone de conversation. Par défaut, la hauteur est "50vh".
 - `fontFamilyMarkdown`: (optionnel) : La police de caractères Markdown. Par défaut, la police est "inherit".
+- `themeOverrides`: (optionnel) : Les variables CSS à appliquer au composant. Les propriétés disponibles sont:
+  - `--bg-color-light`: la couleur de fond clair.
+  - `--bg-color-white`: la couleur de fond blanc.
+  - `--bg-color-dark`: la couleur de fond sombre.
+  - `--text-color-light`: la couleur du texte clair.
+  - `--text-color-dark`: la couleur du texte sombre.
+  - `--box-shadow-light`: la valeur de l'ombre claire.
+  - `--box-shadow-dark`: la valeur de l'ombre sombre.
+  - `--box-shadow-lang-light`: la valeur de l'ombre claire pour les langages.
+  - `--box-shadow-langdark`: la valeur de l'ombre sombre pour les langages.
+  - `--border-light`: la couleur de la bordure claire.
+  - `--border-dark`: la couleur de la bordure sombre.
 - `classes`: (optionnel) : Les classes CSS à appliquer au composant. Les propriétés disponibles sont:
   - `container`: la classe CSS pour le conteneur principal.
   - `messages`: la classe CSS pour le conteneur des messages.
@@ -94,6 +106,19 @@ function App() {
         theme="dark"
         scrollHeightChat={"80vh" || "300px" || "80rem"}
         fontFamilyMarkdown="sans-serif"
+        themeOverrides={{
+        "--bg-color-light": "#f6f6f6";
+        "--bg-color-white":"#fff";
+        "--bg-color-dark": "#000";
+        "--text-color-light": "#000";
+        "--text-color-dark": "#fff";
+        "--box-shadow-light": "0 0 0px 10px rgba(255, 255, 255, 0.4)";
+        "--box-shadow-dark": "0 0 0px 10px rgba(255, 255, 255, 0.4)";
+        "--box-shadow-lang-light": "0 0 0px 10px rgba(0, 0, 0, 0.4)";
+        "--box-shadow-langdark": "0 0 0px 10px rgba(0, 0, 0, 0.4)";
+        "--border-light": "#d9d9d9";
+        "--border-dark": "#000000";
+        }}
         classes={{
           container: "my-custom-class",
           messages: "my-custom-class",
@@ -127,7 +152,8 @@ function App() {
 - Prend en charge les traductions via l'objet `intls`.
 - Permet d'afficher les boutons d'actions pour la fiabilité du message.
 - Permet d'afficher les outils de l'assistant en cours d'exécution.
-- Permet de personnaliser le thème du composant.
+- Permet de personnaliser le thème du composant .
+- Permet de customiser le thème.
 - Permet de personnaliser la hauteur de la zone de conversation.
 - Permet de personnaliser les classes CSS du composant.
 - Permet de personnaliser la police de caractères Markdown.
