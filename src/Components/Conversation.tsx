@@ -13,12 +13,14 @@ import {
   EnumLangChat,
   TLangKey,
   ITheme,
+  TFontFamily,
 } from "../types";
 import MuiTextField from "./TextField";
 import { hexToTransparentHex } from "../commons";
 import Lang from "./Lang";
 import Message from "./Message";
 import TypingMessage from "./TypingMessage";
+import cl from "classnames";
 
 interface IProps {
   publicKey: string;
@@ -39,6 +41,22 @@ interface IProps {
   displayActions?: boolean;
   displayTools?: boolean;
   theme?: ITheme;
+  scrollHeightChat?: string;
+  fontFamilyMarkdown?: TFontFamily;
+  classes?: {
+    container?: string;
+    messages?: string;
+    inputContainer?: string;
+    input?: string;
+    messageUser?: string;
+    messageAssistant?: string;
+    poweredBy?: string;
+    typing?: string;
+    actionsContainer?: string;
+    btnContainerFiability?: string;
+    thumpDownIcon?: string;
+    thumpUpIcon?: string;
+  };
 }
 
 export const Conversation: React.FC<IProps> = ({
@@ -58,6 +76,9 @@ export const Conversation: React.FC<IProps> = ({
   displayActions,
   displayTools,
   theme,
+  classes,
+  scrollHeightChat = "50vh",
+  fontFamilyMarkdown = "inherit",
 }) => {
   const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
@@ -240,17 +261,29 @@ export const Conversation: React.FC<IProps> = ({
 
   return (
     <div
-      className={classNames(styles["devana-conversation-container"], {
-        [styles["dark"] as string]: theme === "dark",
-      })}
+      className={cl(
+        styles["devana-conversation-container"],
+        {
+          [styles["dark"] as string]: theme === "dark",
+        },
+        classes?.container,
+      )}
       style={{
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
     >
-      <Lang value={lang} onChange={(value) => setLang(value)} />
-      <div ref={refScroll} className={styles.scrollZone}>
+      <Lang
+        value={lang}
+        onChange={(value) => setLang(value)}
+        theme={theme === "dark" ? "dark" : "light"}
+      />
+      <div
+        ref={refScroll}
+        className={styles.scrollZone}
+        style={{ maxHeight: scrollHeightChat }}
+      >
         <div style={{ height: "26px" }} />
-        <div className={styles.messages}>
+        <div className={cl(styles.messages, classes?.messages)}>
           {welcomeMessage &&
             Object.keys(welcomeMessage)
               .filter((key): key is TLangKey => key === lang.toLowerCase())
@@ -279,6 +312,16 @@ export const Conversation: React.FC<IProps> = ({
                 userTextColor={userTextColor}
                 handleFiabilityMessage={handleFiabilityMessage}
                 displayActions={displayActions}
+                classes={{
+                  messageAssistant: classes?.messageAssistant,
+                  messageUser: classes?.messageUser,
+                  actionsContainer: classes?.actionsContainer,
+                  btnContainerFiability: classes?.btnContainerFiability,
+                  thumpDownIcon: classes?.thumpDownIcon,
+                  thumpUpIcon: classes?.thumpUpIcon,
+                }}
+                theme={theme}
+                fontFamilyMarkdown={fontFamilyMarkdown}
               />
             ))}
           {typingMessage && !isPending && (
@@ -292,11 +335,20 @@ export const Conversation: React.FC<IProps> = ({
               assistantBackgroundColor={assistantBackgroundColor}
               assistantTextColor={assistantTextColor}
               userTextColor={userTextColor}
+              classes={{
+                messageAssistant: classes?.messageAssistant,
+                messageUser: classes?.messageUser,
+              }}
+              fontFamilyMarkdown={fontFamilyMarkdown}
+              theme={theme}
             />
           )}
           {error && (
             <div
-              className={styles[`message-assistant`]}
+              className={cl(
+                styles[`message-assistant`],
+                classes?.messageAssistant,
+              )}
               style={{
                 backgroundColor: hexToTransparentHex("#ff0000", 0.8),
                 color: "#ffffff",
@@ -307,13 +359,16 @@ export const Conversation: React.FC<IProps> = ({
           )}
           {isPending && (
             <div
-              className={styles[`message-assistant`]}
+              className={cl(
+                styles[`message-assistant`],
+                classes?.messageAssistant,
+              )}
               style={{
                 backgroundColor: assistantBackgroundColor,
                 color: assistantTextColor,
               }}
             >
-              <div className={styles.typing}>
+              <div className={cl(styles.typing, classes?.typing)}>
                 <div className={styles.dot} />
                 <div className={styles.dot} />
                 <div className={styles.dot} />
@@ -334,9 +389,13 @@ export const Conversation: React.FC<IProps> = ({
           buttonTextColor={buttonTextColor}
           intls={intls}
           theme={theme}
+          classes={{
+            inputContainer: classes?.inputContainer,
+            input: classes?.input,
+          }}
         />
         {!hiddenWatermark && (
-          <div className={styles.poweredBy}>
+          <div className={cl(styles.poweredBy, classes?.poweredBy)}>
             Propulsé par{" "}
             <a href="https://devana.ai" target="_blank" rel="noreferrer">
               Devana

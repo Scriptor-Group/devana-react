@@ -1,9 +1,10 @@
+@import url("./variables.module.css");
 .lang-selector {
     position: fixed;
     top: 10px;
     left: 10px;
     padding: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: var(--bg-color-light);
     backdrop-filter: blur(10px);
     border-radius: 5px;
     z-index: 1000;
@@ -11,8 +12,13 @@
     height: 20px;
     overflow: scroll;
     transition: all 0.3s;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px var(--box-shadow-color-light);
     opacity: 0.4;
+}
+
+.lang-selector.dark  {
+    background-color: var(--bg-color-white);
+    box-shadow: 0 0 10px var(--box-shadow-color-dark);
 }
 
 .lang-selector div:nth-child(n+2) {

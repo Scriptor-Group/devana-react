@@ -16,6 +16,10 @@ const MuiTextField: React.FC<{
   intls?: IIntls;
   showResetButton?: boolean;
   theme?: ITheme;
+  classes?: {
+    inputContainer?: string;
+    input?: string;
+  };
 }> = ({
   value,
   onChange,
@@ -26,6 +30,7 @@ const MuiTextField: React.FC<{
   intls,
   showResetButton,
   theme,
+  classes,
 }) => {
   return (
     <form
@@ -33,7 +38,7 @@ const MuiTextField: React.FC<{
         e.preventDefault();
         onSubmit();
       }}
-      className={classNames(styles.container, {
+      className={classNames(styles.container, classes?.inputContainer, {
         [styles.dark as string]: theme === "dark",
       })}
     >
@@ -49,7 +54,7 @@ const MuiTextField: React.FC<{
           placeholder={intls?.placeholder || "Entrez votre question"}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={styles.input}
+          className={classNames(styles.input, classes?.input)}
           maxLength={500}
           multiple
           required

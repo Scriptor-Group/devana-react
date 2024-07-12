@@ -2,12 +2,13 @@
 
 import React from "react";
 import styles from "../styles/typing-message.module.css";
-import { IMessage } from "../types";
+import { IMessage, ITheme, TFontFamily } from "../types";
 import { hexToTransparentHex } from "../commons";
 import classNames from "classnames";
 import { toolsIcons } from "../utils/tools";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { MARKDOWN_PROPS } from "../config";
+import cl from "classnames";
 
 interface IProps {
   message: IMessage;
@@ -18,6 +19,12 @@ interface IProps {
   displayTools?: boolean;
   assistantTextColor?: string;
   userTextColor?: string;
+  classes?: {
+    messageUser?: string;
+    messageAssistant?: string;
+  };
+  fontFamilyMarkdown?: TFontFamily;
+  theme?: ITheme;
 }
 
 const TypingMessage: React.FC<IProps> = ({
@@ -29,11 +36,20 @@ const TypingMessage: React.FC<IProps> = ({
   assistantBackgroundColor,
   assistantTextColor,
   userTextColor,
+  classes,
+  fontFamilyMarkdown,
+  theme,
 }) => {
   return (
     <div
       key={`message_${message?.id}`}
-      className={styles[`message-${message?.message.role}`]}
+      className={cl(
+        styles[`message-${message?.message.role}`],
+        {
+          [styles["dark"] as string]: theme === "dark",
+        },
+        classes?.messageAssistant,
+      )}
       style={{
         backgroundColor: hexToTransparentHex(
           assistantBackgroundColor || "#ffffff",
@@ -74,6 +90,7 @@ const TypingMessage: React.FC<IProps> = ({
               message?.message.role === "assistant"
                 ? assistantTextColor
                 : userTextColor,
+            fontFamily: fontFamilyMarkdown,
           },
         }}
         source={message?.message.content}

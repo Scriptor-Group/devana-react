@@ -5,6 +5,7 @@ import { IMessage, EnumFiabilityMessage, TFiabilityMessage } from "../types";
 import ThumbDownIcon from "../assets/thumb-down";
 import ThumbUpIcon from "../assets/thumb-up";
 import styles from "../styles/fiability.module.css";
+import cl from "classnames";
 
 interface IProps {
   message: IMessage;
@@ -13,15 +14,22 @@ interface IProps {
     message: IMessage,
     fiability: TFiabilityMessage,
   ) => void;
+  classes?: {
+    actionsContainer?: string;
+    btnContainerFiability?: string;
+    thumpDownIcon?: string;
+    thumpUpIcon?: string;
+  };
 }
 
 const Fiability: React.FC<IProps> = ({
   message,
   fiability,
   handleFiabilityMessage,
+  classes,
 }) => {
   return (
-    <div className={styles["actions-container"]}>
+    <div className={cl(styles["actions-container"], classes?.actionsContainer)}>
       {Object.values(EnumFiabilityMessage).map((fiability_key) => (
         <div
           onClick={() => {
@@ -30,12 +38,25 @@ const Fiability: React.FC<IProps> = ({
 
             handleFiabilityMessage(message, send);
           }}
-          className={styles["btn-container-fiability"]}
+          className={cl(
+            styles["btn-container-fiability"],
+            classes?.btnContainerFiability,
+          )}
         >
           {fiability_key === EnumFiabilityMessage.BAD ? (
-            <ThumbDownIcon active={fiability === fiability_key} />
+            <ThumbDownIcon
+              active={fiability === fiability_key}
+              classes={{
+                thumpDownIcon: classes?.thumpDownIcon,
+              }}
+            />
           ) : (
-            <ThumbUpIcon active={fiability === fiability_key} />
+            <ThumbUpIcon
+              active={fiability === fiability_key}
+              classes={{
+                thumpUpIcon: classes?.thumpUpIcon,
+              }}
+            />
           )}
         </div>
       ))}

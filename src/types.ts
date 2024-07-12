@@ -42,3 +42,17 @@ export type TLang = EnumLangChat.fr | EnumLangChat.us;
 export type TLangKey = keyof typeof EnumLangChat;
 
 export type ITheme = "light" | "dark";
+
+export type TFontFamily =
+  | "-moz-initial"
+  | "inherit"
+  | "initial"
+  | "revert"
+  | "revert-layer"
+  | "unset"
+  | "cursive"
+  | "fantasy"
+  | "monospace"
+  | "sans-serif"
+  | "serif"
+  | (string & {});

@@ -1,16 +1,26 @@
-
+@import url("./variables.module.css");
 .message-assistant {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 10px;
     margin-right: auto;
-    background-color: #f1f0f0;
+    background-color: var(--bg-color-light);
 }
+
+.message-assistant.dark {
+    background-color: var(--bg-color-white);
+}
+
 
 .message-user {
     display: flex;
     justify-content: flex-start;
     margin-bottom: 10px;
     margin-left: auto;
-    background-color: #f1f0f0;
+    background-color: var(--bg-color-light);
 }
+
+.message-user.dark {
+    background-color: var(--bg-color-white);
+}
+
