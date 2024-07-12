@@ -19,7 +19,7 @@ const Lang: React.FC<IProps> = ({ value, onChange, theme, themeOverrides }) => {
       className={cl(styles["lang-selector"], {
         [styles["dark"] as string]: theme === "dark",
       })}
-      style={themeOverrides}
+      style={themeOverrides as React.CSSProperties}
     >
       {Object.values(EnumLangChat)
         .sort((a, b) => (a === value ? -1 : b === value ? 1 : 0))

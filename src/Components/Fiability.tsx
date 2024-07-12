@@ -38,7 +38,7 @@ const Fiability: React.FC<IProps> = ({
   return (
     <div
       className={cl(styles["actions-container"], classes?.actionsContainer)}
-      style={themeOverrides}
+      style={themeOverrides as React.CSSProperties}
     >
       {Object.values(EnumFiabilityMessage).map((fiability_key) => (
         <div

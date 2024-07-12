@@ -43,7 +43,7 @@ const MuiTextField: React.FC<{
       className={classNames(styles.container, classes?.inputContainer, {
         [styles.dark as string]: theme === "dark",
       })}
-      style={themeOverrides}
+      style={themeOverrides as React.CSSProperties}
     >
       {showResetButton && (
         <div>

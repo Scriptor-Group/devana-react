@@ -57,7 +57,7 @@ export type TFontFamily =
   | "serif"
   | (string & {});
 
-export type ThemeOverrides = React.CSSProperties & {
+export type ThemeOverrides = {
   "--bg-color-light"?: string;
   "--bg-color-dark"?: string;
   "--box-shadow-color-light"?: string;
