@@ -1,6 +1,8 @@
+"use client";
+
 import React from "react";
-import styles from "./TextField.module.css";
 import { IIntls, ITheme } from "../types";
+import styles from "../styles/textfield.module.css";
 import ResetChatIcon from "../assets/reset-chat";
 import classNames from "classnames";
 

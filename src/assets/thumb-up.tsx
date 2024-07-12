@@ -1,5 +1,5 @@
 import React from "react";
-import css from "./thumb-up.module.css";
+import css from "../styles/thumb-up.module.css";
 import cl from "classnames";
 
 const ThumbUpIcon: React.FC<{

@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { useChat } from "../hooks/useChat";
-import styles from "./Conversation.module.css";
+import styles from "../styles/conversation.module.css";
 import { useApi } from "../hooks/useApi";
 import {
-  EnumFiabilityMessage,
   IIntls,
   IMessage,
   TEventName,
@@ -16,15 +15,10 @@ import {
   ITheme,
 } from "../types";
 import MuiTextField from "./TextField";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { MARKDOWN_PROPS } from "../config";
 import { hexToTransparentHex } from "../commons";
-import * as flags from "country-flag-icons/string/3x2";
-import ThumbDownIcon from "../assets/thumb-down";
-import ThumbUpIcon from "../assets/thumb-up";
-import classNames from "classnames";
-import GlobalSearch from "../assets/tools/GlobalSearch";
-import { toolsIcons } from "../utils/tools";
+import Lang from "./Lang";
+import Message from "./Message";
+import TypingMessage from "./TypingMessage";
 
 interface IProps {
   publicKey: string;
@@ -163,7 +157,9 @@ export const Conversation: React.FC<IProps> = ({
 
     onEvent && onEvent("messageSent", query);
 
-    sendMessage(query, {
+    const language = lang === EnumLangChat.fr ? "fr" : "us";
+
+    sendMessage(query, language, {
       onError: (error) => {
         onEvent && onEvent("onError", error);
         setError(error);
@@ -217,7 +213,6 @@ export const Conversation: React.FC<IProps> = ({
   };
 
   const handleResetConversation = () => {
-    console.log("handleResetConversation");
     setMessages([]);
     setTypingMessage(null);
     setQuery("");
@@ -252,25 +247,7 @@ export const Conversation: React.FC<IProps> = ({
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
     >
-      <div className={styles["lang-selector"]}>
-        {Object.values(EnumLangChat)
-          .sort((a, b) => (a === lang ? -1 : b === lang ? 1 : 0))
-          .map((l) => (
-            <div
-              key={l}
-              onClick={() => setLang(l)}
-              style={{
-                opacity: l === lang ? 1 : 0.5,
-              }}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: flags[l as keyof typeof flags],
-                }}
-              />
-            </div>
-          ))}
-      </div>
+      <Lang value={lang} onChange={(value) => setLang(value)} />
       <div ref={refScroll} className={styles.scrollZone}>
         <div style={{ height: "26px" }} />
         <div className={styles.messages}>
@@ -280,7 +257,7 @@ export const Conversation: React.FC<IProps> = ({
               .map((l) => (
                 <div
                   key={l}
-                  className={styles[`message-assistant`]}
+                  className={styles[`welcome-message`]}
                   style={{
                     backgroundColor: assistantBackgroundColor,
                     color: assistantTextColor,
@@ -292,125 +269,30 @@ export const Conversation: React.FC<IProps> = ({
           {messages
             .filter((e) => e.message.content)
             .sort((a, b) => a.created - b.created)
-            .map((m, i) => (
-              <div
-                key={`message_${m.id}`}
-                className={styles[`message-${m.message.role}`]}
-                style={
-                  m.message.role === "assistant"
-                    ? {
-                        backgroundColor: hexToTransparentHex(
-                          assistantBackgroundColor || "#ffffff",
-                          0.8,
-                        ),
-                        color: assistantTextColor,
-                        display: "flex",
-                        flexDirection: "column",
-                      }
-                    : {
-                        backgroundColor: hexToTransparentHex(
-                          userBackgroundColor || "#ffffff",
-                          0.8,
-                        ),
-                        color: userTextColor,
-                      }
-                }
-              >
-                <MarkdownPreview
-                  {...{
-                    ...MARKDOWN_PROPS,
-                    style: {
-                      ...MARKDOWN_PROPS.style,
-                      color:
-                        m.message.role === "assistant"
-                          ? assistantTextColor
-                          : userTextColor,
-                    },
-                  }}
-                  source={m.message.content}
-                />
-
-                {displayActions && m.message.role === "assistant" && (
-                  <div className={styles["actions-container"]}>
-                    {Object.values(EnumFiabilityMessage).map(
-                      (fiability_key) => (
-                        <div
-                          onClick={() => {
-                            const send =
-                              m.fiability === fiability_key
-                                ? "DEFAULT"
-                                : fiability_key;
-
-                            handleFiabilityMessage(m, send);
-                          }}
-                          className={styles["btn-container-fiability"]}
-                        >
-                          {fiability_key === EnumFiabilityMessage.BAD ? (
-                            <ThumbDownIcon
-                              active={m.fiability === fiability_key}
-                            />
-                          ) : (
-                            <ThumbUpIcon
-                              active={m.fiability === fiability_key}
-                            />
-                          )}
-                        </div>
-                      ),
-                    )}
-                  </div>
-                )}
-              </div>
+            .map((m) => (
+              <Message
+                key={`message_${m.id}-${messages.length}`}
+                message={m}
+                assistantBackgroundColor={assistantBackgroundColor}
+                assistantTextColor={assistantTextColor}
+                userBackgroundColor={userBackgroundColor}
+                userTextColor={userTextColor}
+                handleFiabilityMessage={handleFiabilityMessage}
+                displayActions={displayActions}
+              />
             ))}
           {typingMessage && !isPending && (
-            <div
+            <TypingMessage
               key={`message_${typingMessage.id}`}
-              className={styles[`message-${typingMessage.message.role}`]}
-              style={{
-                backgroundColor: hexToTransparentHex(
-                  assistantBackgroundColor || "#ffffff",
-                  0.8,
-                ),
-                color: assistantTextColor,
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              {runnedTools &&
-                typingMessage.message.content.trim().length === 0 &&
-                displayTools && (
-                  <div className={styles["tool-container"]}>
-                    <div
-                      className={classNames(styles["tool-block"], {
-                        [styles["tool-working"] as string]: tools.length === 0,
-                      })}
-                    />
-
-                    {runnedTools.map((tool) => (
-                      <div
-                        className={classNames(styles["tool-block"], {
-                          [styles["tool-working"] as string]:
-                            tool === activeToolState,
-                        })}
-                      >
-                        {toolsIcons(tool)}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              <MarkdownPreview
-                {...{
-                  ...MARKDOWN_PROPS,
-                  style: {
-                    ...MARKDOWN_PROPS.style,
-                    color:
-                      typingMessage.message.role === "assistant"
-                        ? assistantTextColor
-                        : userTextColor,
-                  },
-                }}
-                source={typingMessage.message.content}
-              />
-            </div>
+              message={typingMessage}
+              displayTools={displayTools}
+              tools={tools}
+              activeToolState={activeToolState}
+              runnedTools={runnedTools}
+              assistantBackgroundColor={assistantBackgroundColor}
+              assistantTextColor={assistantTextColor}
+              userTextColor={userTextColor}
+            />
           )}
           {error && (
             <div
