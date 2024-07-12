@@ -3,6 +3,7 @@ import browserslist from "browserslist";
 import { resolveToEsbuildTarget } from "esbuild-plugin-browserslist";
 import { readPackage } from "read-pkg";
 import { defineConfig } from "vite";
+import { visualizer } from "rollup-plugin-visualizer";
 
 const pkg = await readPackage();
 
@@ -32,8 +33,18 @@ const targets = resolveToEsbuildTarget(
 export default defineConfig({
   build: {
     outDir: "dist",
+    sourcemap: true,
     target: [...targets, "node20"],
-    minify: false,
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
+      output: {
+        comments: false,
+      },
+    },
+
     lib: {
       name: pkg.name,
       entry: "src/index.ts",
@@ -56,6 +67,10 @@ export default defineConfig({
   plugins: [
     react({
       jsxRuntime: "automatic",
+    }),
+    visualizer({
+      filename: "stats.html",
+      open: true,
     }),
   ],
 });

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { API_URL, API_VERSION } from "../config";
-import { IMessage, TFiabilityMessage } from "../types";
+import { IMessage, TFiabilityMessage, TLangKey } from "../types";
 
 /**
  * Custom hook for handling chat functionality.
@@ -34,6 +34,7 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
    */
   const sendMessage = async (
     message: string,
+    lang: TLangKey,
     options: {
       onMessage?: (message: string) => void;
       onFinish?: (data: { text: string }) => void;
@@ -57,6 +58,7 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          lang,
           stream: true,
           client_token: userToken,
           messages: [
@@ -111,7 +113,6 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
           }
         } catch (error) {
           if (error instanceof Error && error.name === "AbortError") {
-            console.log("Aborted");
             break;
           } else if (error instanceof Error) {
             console.error(error);
