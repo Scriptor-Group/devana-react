@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { IIntls, ITheme } from "../types";
+import { IIntls, ITheme, ThemeOverrides } from "../types";
 import styles from "../styles/textfield.module.css";
 import ResetChatIcon from "../assets/reset-chat";
 import classNames from "classnames";
@@ -20,6 +20,7 @@ const MuiTextField: React.FC<{
     inputContainer?: string;
     input?: string;
   };
+  themeOverrides?: ThemeOverrides;
 }> = ({
   value,
   onChange,
@@ -31,6 +32,7 @@ const MuiTextField: React.FC<{
   showResetButton,
   theme,
   classes,
+  themeOverrides,
 }) => {
   return (
     <form
@@ -41,6 +43,7 @@ const MuiTextField: React.FC<{
       className={classNames(styles.container, classes?.inputContainer, {
         [styles.dark as string]: theme === "dark",
       })}
+      style={themeOverrides}
     >
       {showResetButton && (
         <div>

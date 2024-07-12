@@ -2,7 +2,7 @@
 
 import React from "react";
 import styles from "../styles/typing-message.module.css";
-import { IMessage, ITheme, TFontFamily } from "../types";
+import { IMessage, ITheme, TFontFamily, ThemeOverrides } from "../types";
 import { hexToTransparentHex } from "../commons";
 import classNames from "classnames";
 import { toolsIcons } from "../utils/tools";
@@ -25,6 +25,7 @@ interface IProps {
   };
   fontFamilyMarkdown?: TFontFamily;
   theme?: ITheme;
+  themeOverrides?: ThemeOverrides;
 }
 
 const TypingMessage: React.FC<IProps> = ({
@@ -39,6 +40,7 @@ const TypingMessage: React.FC<IProps> = ({
   classes,
   fontFamilyMarkdown,
   theme,
+  themeOverrides,
 }) => {
   return (
     <div
@@ -58,6 +60,7 @@ const TypingMessage: React.FC<IProps> = ({
         color: assistantTextColor,
         display: "flex",
         flexDirection: "column",
+        ...themeOverrides,
       }}
     >
       {runnedTools &&

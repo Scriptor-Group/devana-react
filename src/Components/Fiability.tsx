@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { IMessage, EnumFiabilityMessage, TFiabilityMessage } from "../types";
+import {
+  IMessage,
+  EnumFiabilityMessage,
+  TFiabilityMessage,
+  ThemeOverrides,
+} from "../types";
 import ThumbDownIcon from "../assets/thumb-down";
 import ThumbUpIcon from "../assets/thumb-up";
 import styles from "../styles/fiability.module.css";
@@ -10,6 +15,7 @@ import cl from "classnames";
 interface IProps {
   message: IMessage;
   fiability: TFiabilityMessage;
+  themeOverrides?: ThemeOverrides;
   handleFiabilityMessage: (
     message: IMessage,
     fiability: TFiabilityMessage,
@@ -27,9 +33,13 @@ const Fiability: React.FC<IProps> = ({
   fiability,
   handleFiabilityMessage,
   classes,
+  themeOverrides,
 }) => {
   return (
-    <div className={cl(styles["actions-container"], classes?.actionsContainer)}>
+    <div
+      className={cl(styles["actions-container"], classes?.actionsContainer)}
+      style={themeOverrides}
+    >
       {Object.values(EnumFiabilityMessage).map((fiability_key) => (
         <div
           onClick={() => {

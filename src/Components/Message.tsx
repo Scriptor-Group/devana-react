@@ -3,7 +3,13 @@
 import React from "react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { MARKDOWN_PROPS } from "../config";
-import { IMessage, ITheme, TFiabilityMessage, TFontFamily } from "../types";
+import {
+  IMessage,
+  ITheme,
+  TFiabilityMessage,
+  TFontFamily,
+  ThemeOverrides,
+} from "../types";
 import { hexToTransparentHex } from "../commons";
 import styles from "../styles/message.module.css";
 import Fiability from "./Fiability";
@@ -30,6 +36,7 @@ interface IProps {
   };
   theme?: ITheme;
   fontFamilyMarkdown?: TFontFamily;
+  themeOverrides?: ThemeOverrides;
 }
 
 const Message: React.FC<IProps> = ({
@@ -43,6 +50,7 @@ const Message: React.FC<IProps> = ({
   classes,
   theme,
   fontFamilyMarkdown,
+  themeOverrides,
 }) => {
   return (
     <div
@@ -68,6 +76,7 @@ const Message: React.FC<IProps> = ({
               color: assistantTextColor,
               display: "flex",
               flexDirection: "column",
+              ...themeOverrides,
             }
           : {
               backgroundColor: hexToTransparentHex(
@@ -75,6 +84,7 @@ const Message: React.FC<IProps> = ({
                 0.8,
               ),
               color: userTextColor,
+              ...themeOverrides,
             }
       }
     >

@@ -14,6 +14,7 @@ import {
   TLangKey,
   ITheme,
   TFontFamily,
+  ThemeOverrides,
 } from "../types";
 import MuiTextField from "./TextField";
 import { hexToTransparentHex } from "../commons";
@@ -43,6 +44,7 @@ interface IProps {
   theme?: ITheme;
   scrollHeightChat?: string;
   fontFamilyMarkdown?: TFontFamily;
+  themeOverrides?: ThemeOverrides;
   classes?: {
     container?: string;
     messages?: string;
@@ -79,6 +81,7 @@ export const Conversation: React.FC<IProps> = ({
   classes,
   scrollHeightChat = "50vh",
   fontFamilyMarkdown = "inherit",
+  themeOverrides = {},
 }) => {
   const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
@@ -269,6 +272,7 @@ export const Conversation: React.FC<IProps> = ({
         classes?.container,
       )}
       style={{
+        ...themeOverrides,
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
     >
@@ -276,6 +280,7 @@ export const Conversation: React.FC<IProps> = ({
         value={lang}
         onChange={(value) => setLang(value)}
         theme={theme === "dark" ? "dark" : "light"}
+        themeOverrides={themeOverrides}
       />
       <div
         ref={refScroll}
