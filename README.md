@@ -114,8 +114,6 @@ function App() {
         "--text-color-dark": "#fff";
         "--box-shadow-light": "0 0 0px 10px rgba(255, 255, 255, 0.4)";
         "--box-shadow-dark": "0 0 0px 10px rgba(255, 255, 255, 0.4)";
-        "--box-shadow-lang-light": "0 0 0px 10px rgba(0, 0, 0, 0.4)";
-        "--box-shadow-langdark": "0 0 0px 10px rgba(0, 0, 0, 0.4)";
         "--border-light": "#d9d9d9";
         "--border-dark": "#000000";
         }}
