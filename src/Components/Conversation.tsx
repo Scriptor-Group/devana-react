@@ -26,7 +26,7 @@ import cl from "classnames";
 interface IProps {
   publicKey: string;
   welcomeMessage?: {
-    [key in TLangKey]: string;
+    [key in EnumLangChat | string]: string | React.ReactNode | null;
   };
   assistantBackgroundColor?: string;
   assistantTextColor?: string;
@@ -42,6 +42,7 @@ interface IProps {
   displayActions?: boolean;
   displayTools?: boolean;
   theme?: ITheme;
+  defaultLanguage?: TLang;
   scrollHeightChat?: string;
   fontFamilyMarkdown?: TFontFamily;
   themeOverrides?: ThemeOverrides;
@@ -73,6 +74,7 @@ export const Conversation: React.FC<IProps> = ({
   buttonBackgroundColor,
   buttonTextColor,
   intls,
+  defaultLanguage,
   hiddenWatermark,
   onEvent,
   displayActions,
@@ -98,7 +100,7 @@ export const Conversation: React.FC<IProps> = ({
   const [error, setError] = React.useState<string | null>(null);
   const [isPending, setIsPending] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
-  const [lang, setLang] = useState<TLang>(EnumLangChat.fr);
+  const [lang, setLang] = useState<TLang>(defaultLanguage || EnumLangChat.us);
   const [runnedTools, setRunnedTools] = useState<string[]>([]);
   const [activeToolState, setActiveTool] = useState<string | null>(null);
 
@@ -243,6 +245,11 @@ export const Conversation: React.FC<IProps> = ({
     createToken(true);
   };
 
+  const currentWelcomeMessage =
+    welcomeMessage?.[lang.toLocaleLowerCase()] ||
+    welcomeMessage?.[EnumLangChat.us.toLocaleLowerCase()] ||
+    null;
+
   const handleFiabilityMessage = async (
     message: IMessage,
     fiability: TFiabilityMessage,
@@ -289,21 +296,17 @@ export const Conversation: React.FC<IProps> = ({
       >
         <div style={{ height: "26px" }} />
         <div className={cl(styles.messages, classes?.messages)}>
-          {welcomeMessage &&
-            Object.keys(welcomeMessage)
-              .filter((key): key is TLangKey => key === lang.toLowerCase())
-              .map((l) => (
-                <div
-                  key={l}
-                  className={styles[`welcome-message`]}
-                  style={{
-                    backgroundColor: assistantBackgroundColor,
-                    color: assistantTextColor,
-                  }}
-                >
-                  {welcomeMessage[l]}
-                </div>
-              ))}
+          {currentWelcomeMessage && (
+            <div
+              className={styles[`welcome-message`]}
+              style={{
+                backgroundColor: assistantBackgroundColor,
+                color: assistantTextColor,
+              }}
+            >
+              {currentWelcomeMessage}
+            </div>
+          )}
           {messages
             .filter((e) => e.message.content)
             .sort((a, b) => a.created - b.created)
