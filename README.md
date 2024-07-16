@@ -60,6 +60,7 @@ Le composant `Conversation` accepte les props suivantes :
   - `--box-shadow-langdark`: la valeur de l'ombre sombre pour les langages.
   - `--border-light`: la couleur de la bordure claire.
   - `--border-dark`: la couleur de la bordure sombre.
+- `defaultLanguage` (optionnel) : La langue par défaut de la conversation. Les valeurs possibles sont "fr" et "us". Par défaut, la langue est "fr".
 - `classes`: (optionnel) : Les classes CSS à appliquer au composant. Les propriétés disponibles sont:
   - `container`: la classe CSS pour le conteneur principal.
   - `messages`: la classe CSS pour le conteneur des messages.

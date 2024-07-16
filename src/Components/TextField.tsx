@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { IIntls, ITheme, ThemeOverrides } from "../types";
 import styles from "../styles/textfield.module.css";
@@ -65,6 +64,12 @@ const MuiTextField: React.FC<{
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              onSubmit();
+            }
+          }}
         />
       </div>
       <button
