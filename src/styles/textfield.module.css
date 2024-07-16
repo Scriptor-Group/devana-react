@@ -1,0 +1,50 @@
+@import url("./variables.module.css");
+
+.container {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.container.dark {
+  background-color: var(--bg-color-dark);
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+.container.dark .input {
+  background-color: var(--bg-color-dark);
+  color: var(--text-color-dark);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.button {
+  padding: 12px 24px;
+  border-radius: 18px;
+  border: none;
+  background-color: var(--bg-color-dark);
+  color: var(--text-color-dark);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.container.dark .button {
+  background-color: var(--bg-color-white);
+  color: var(--text-color-light);
+}
+
+.button:hover {
+  background-color: #000000;
+}
+
+.container.dark .button:hover {
+  background-color: var(--bg-color-light);
+}

@@ -1,0 +1,10 @@
+.actions-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-container-fiability {
+    margin: 0 8px;
+}

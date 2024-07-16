@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { Conversation } from "./Conversation";
+import { Conversation } from "../Components/Conversation";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -102,6 +101,57 @@ const meta = {
         },
       },
     },
+    scrollHeightChat: {
+      description: "The height of the chat area",
+      table: {
+        type: {
+          summary: "string",
+        },
+      },
+    },
+    classes: {
+      description: "The classes to apply to the component",
+      table: {
+        type: {
+          summary: "object",
+        },
+      },
+    },
+    displayTools: {
+      description: "Whether to display the tools in streaming response",
+      table: {
+        type: {
+          summary: "boolean",
+        },
+      },
+      defaultValue: false,
+    },
+
+    displayActions: {
+      description: "Whether to display the actions (noting response)",
+      table: {
+        type: {
+          summary: "boolean",
+        },
+      },
+      defaultValue: false,
+    },
+    theme: {
+      description: "The theme of the component",
+      table: {
+        type: {
+          summary: "light | dark",
+        },
+      },
+    },
+    fontFamilyMarkdown: {
+      description: "The font family of the markdown content",
+      table: {
+        type: {
+          summary: "string",
+        },
+      },
+    },
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // args: { onClick: fn() },
@@ -120,25 +170,23 @@ export const Primary: Story = {
     },
     displayActions: true,
     displayTools: true,
+    scrollHeightChat: "80vh",
+    themeOverrides: {
+      "--bg-color-light": "yellow",
+    },
   },
 };
 
-// export const Secondary: Story = {
-//   args: {
-//     label: "Conversation",
-//   },
-// };
-
-// export const Large: Story = {
-//   args: {
-//     size: "large",
-//     label: "Conversation",
-//   },
-// };
-
-// export const Small: Story = {
-//   args: {
-//     size: "small",
-//     label: "Conversation",
-//   },
-// };
+export const Secondary: Story = {
+  args: {
+    publicKey: "",
+    welcomeMessage: {
+      fr: "Bonjour, je suis une IA conversationnelle",
+      us: "Hello, I am a conversational AI",
+    },
+    displayActions: true,
+    displayTools: true,
+    theme: "dark",
+    scrollHeightChat: "600px",
+  },
+};

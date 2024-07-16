@@ -1,17 +1,24 @@
 import React from "react";
-import css from "./thumb-up.module.css";
+import css from "../styles/thumb-up.module.css";
 import cl from "classnames";
 
 const ThumbUpIcon: React.FC<{
   onClick?: () => void;
   active?: boolean;
-}> = ({ onClick, active }) => {
+  classes?: {
+    thumpUpIcon?: string;
+  };
+}> = ({ onClick, active, classes }) => {
   return (
     <div
       onClick={onClick}
-      className={cl(css["button-thumb-up-icon"], {
-        [css["button-thumb-up-icon-active"] as string]: active,
-      })}
+      className={cl(
+        css["button-thumb-up-icon"],
+        {
+          [css["button-thumb-up-icon-active"] as string]: active,
+        },
+        classes?.thumpUpIcon,
+      )}
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
         <path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />

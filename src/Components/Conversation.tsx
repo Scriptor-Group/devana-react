@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { useChat } from "../hooks/useChat";
-import styles from "./Conversation.module.css";
+import styles from "../styles/conversation.module.css";
 import { useApi } from "../hooks/useApi";
 import {
-  EnumFiabilityMessage,
   IIntls,
   IMessage,
   TEventName,
@@ -13,17 +12,16 @@ import {
   TLang,
   EnumLangChat,
   TLangKey,
+  ITheme,
+  TFontFamily,
+  ThemeOverrides,
 } from "../types";
 import MuiTextField from "./TextField";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { MARKDOWN_PROPS } from "../config";
 import { hexToTransparentHex } from "../commons";
-import * as flags from "country-flag-icons/string/3x2";
-import ThumbDownIcon from "../assets/thumb-down";
-import ThumbUpIcon from "../assets/thumb-up";
-import classNames from "classnames";
-import GlobalSearch from "../assets/tools/GlobalSearch";
-import { toolsIcons } from "../utils/tools";
+import Lang from "./Lang";
+import Message from "./Message";
+import TypingMessage from "./TypingMessage";
+import cl from "classnames";
 
 interface IProps {
   publicKey: string;
@@ -43,6 +41,24 @@ interface IProps {
   onEvent?: (eventName: TEventName, payload: any) => void;
   displayActions?: boolean;
   displayTools?: boolean;
+  theme?: ITheme;
+  scrollHeightChat?: string;
+  fontFamilyMarkdown?: TFontFamily;
+  themeOverrides?: ThemeOverrides;
+  classes?: {
+    container?: string;
+    messages?: string;
+    inputContainer?: string;
+    input?: string;
+    messageUser?: string;
+    messageAssistant?: string;
+    poweredBy?: string;
+    typing?: string;
+    actionsContainer?: string;
+    btnContainerFiability?: string;
+    thumpDownIcon?: string;
+    thumpUpIcon?: string;
+  };
 }
 
 export const Conversation: React.FC<IProps> = ({
@@ -61,6 +77,11 @@ export const Conversation: React.FC<IProps> = ({
   onEvent,
   displayActions,
   displayTools,
+  theme,
+  classes,
+  scrollHeightChat = "50vh",
+  fontFamilyMarkdown = "inherit",
+  themeOverrides = {},
 }) => {
   const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
@@ -160,7 +181,9 @@ export const Conversation: React.FC<IProps> = ({
 
     onEvent && onEvent("messageSent", query);
 
-    sendMessage(query, {
+    const language = lang === EnumLangChat.fr ? "fr" : "us";
+
+    sendMessage(query, language, {
       onError: (error) => {
         onEvent && onEvent("onError", error);
         setError(error);
@@ -214,7 +237,6 @@ export const Conversation: React.FC<IProps> = ({
   };
 
   const handleResetConversation = () => {
-    console.log("handleResetConversation");
     setMessages([]);
     setTypingMessage(null);
     setQuery("");
@@ -242,40 +264,38 @@ export const Conversation: React.FC<IProps> = ({
 
   return (
     <div
-      className={styles["devana-conversation-container"]}
+      className={cl(
+        styles["devana-conversation-container"],
+        {
+          [styles["dark"] as string]: theme === "dark",
+        },
+        classes?.container,
+      )}
       style={{
+        ...themeOverrides,
         backgroundImage: `linear-gradient(140deg, ${chatBackgroundColor}, ${chatBackgroundSecondaryColor})`,
       }}
     >
-      <div className={styles["lang-selector"]}>
-        {Object.values(EnumLangChat)
-          .sort((a, b) => (a === lang ? -1 : b === lang ? 1 : 0))
-          .map((l) => (
-            <div
-              key={l}
-              onClick={() => setLang(l)}
-              style={{
-                opacity: l === lang ? 1 : 0.5,
-              }}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: flags[l as keyof typeof flags],
-                }}
-              />
-            </div>
-          ))}
-      </div>
-      <div ref={refScroll} className={styles.scrollZone}>
+      <Lang
+        value={lang}
+        onChange={(value) => setLang(value)}
+        theme={theme === "dark" ? "dark" : "light"}
+        themeOverrides={themeOverrides}
+      />
+      <div
+        ref={refScroll}
+        className={styles.scrollZone}
+        style={{ maxHeight: scrollHeightChat }}
+      >
         <div style={{ height: "26px" }} />
-        <div className={styles.messages}>
+        <div className={cl(styles.messages, classes?.messages)}>
           {welcomeMessage &&
             Object.keys(welcomeMessage)
               .filter((key): key is TLangKey => key === lang.toLowerCase())
               .map((l) => (
                 <div
                   key={l}
-                  className={styles[`message-assistant`]}
+                  className={styles[`welcome-message`]}
                   style={{
                     backgroundColor: assistantBackgroundColor,
                     color: assistantTextColor,
@@ -287,129 +307,53 @@ export const Conversation: React.FC<IProps> = ({
           {messages
             .filter((e) => e.message.content)
             .sort((a, b) => a.created - b.created)
-            .map((m, i) => (
-              <div
-                key={`message_${m.id}`}
-                className={styles[`message-${m.message.role}`]}
-                style={
-                  m.message.role === "assistant"
-                    ? {
-                        backgroundColor: hexToTransparentHex(
-                          assistantBackgroundColor || "#ffffff",
-                          0.8,
-                        ),
-                        color: assistantTextColor,
-                        display: "flex",
-                        flexDirection: "column",
-                      }
-                    : {
-                        backgroundColor: hexToTransparentHex(
-                          userBackgroundColor || "#ffffff",
-                          0.8,
-                        ),
-                        color: userTextColor,
-                      }
-                }
-              >
-                <MarkdownPreview
-                  {...{
-                    ...MARKDOWN_PROPS,
-                    style: {
-                      ...MARKDOWN_PROPS.style,
-                      color:
-                        m.message.role === "assistant"
-                          ? assistantTextColor
-                          : userTextColor,
-                    },
-                  }}
-                  source={m.message.content}
-                />
-
-                {displayActions && m.message.role === "assistant" && (
-                  <div className={styles["actions-container"]}>
-                    {Object.values(EnumFiabilityMessage).map(
-                      (fiability_key) => (
-                        <div
-                          onClick={() => {
-                            const send =
-                              m.fiability === fiability_key
-                                ? "DEFAULT"
-                                : fiability_key;
-
-                            handleFiabilityMessage(m, send);
-                          }}
-                          className={styles["btn-container-fiability"]}
-                        >
-                          {fiability_key === EnumFiabilityMessage.BAD ? (
-                            <ThumbDownIcon
-                              active={m.fiability === fiability_key}
-                            />
-                          ) : (
-                            <ThumbUpIcon
-                              active={m.fiability === fiability_key}
-                            />
-                          )}
-                        </div>
-                      ),
-                    )}
-                  </div>
-                )}
-              </div>
+            .map((m) => (
+              <Message
+                key={`message_${m.id}-${messages.length}`}
+                message={m}
+                assistantBackgroundColor={assistantBackgroundColor}
+                assistantTextColor={assistantTextColor}
+                userBackgroundColor={userBackgroundColor}
+                userTextColor={userTextColor}
+                handleFiabilityMessage={handleFiabilityMessage}
+                displayActions={displayActions}
+                classes={{
+                  messageAssistant: classes?.messageAssistant,
+                  messageUser: classes?.messageUser,
+                  actionsContainer: classes?.actionsContainer,
+                  btnContainerFiability: classes?.btnContainerFiability,
+                  thumpDownIcon: classes?.thumpDownIcon,
+                  thumpUpIcon: classes?.thumpUpIcon,
+                }}
+                theme={theme}
+                fontFamilyMarkdown={fontFamilyMarkdown}
+              />
             ))}
           {typingMessage && !isPending && (
-            <div
+            <TypingMessage
               key={`message_${typingMessage.id}`}
-              className={styles[`message-${typingMessage.message.role}`]}
-              style={{
-                backgroundColor: hexToTransparentHex(
-                  assistantBackgroundColor || "#ffffff",
-                  0.8,
-                ),
-                color: assistantTextColor,
-                display: "flex",
-                flexDirection: "column",
+              message={typingMessage}
+              displayTools={displayTools}
+              tools={tools}
+              activeToolState={activeToolState}
+              runnedTools={runnedTools}
+              assistantBackgroundColor={assistantBackgroundColor}
+              assistantTextColor={assistantTextColor}
+              userTextColor={userTextColor}
+              classes={{
+                messageAssistant: classes?.messageAssistant,
+                messageUser: classes?.messageUser,
               }}
-            >
-              {runnedTools &&
-                typingMessage.message.content.trim().length === 0 &&
-                displayTools && (
-                  <div className={styles["tool-container"]}>
-                    <div
-                      className={classNames(styles["tool-block"], {
-                        [styles["tool-working"] as string]: tools.length === 0,
-                      })}
-                    />
-
-                    {runnedTools.map((tool) => (
-                      <div
-                        className={classNames(styles["tool-block"], {
-                          [styles["tool-working"] as string]:
-                            tool === activeToolState,
-                        })}
-                      >
-                        {toolsIcons(tool)}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              <MarkdownPreview
-                {...{
-                  ...MARKDOWN_PROPS,
-                  style: {
-                    ...MARKDOWN_PROPS.style,
-                    color:
-                      typingMessage.message.role === "assistant"
-                        ? assistantTextColor
-                        : userTextColor,
-                  },
-                }}
-                source={typingMessage.message.content}
-              />
-            </div>
+              fontFamilyMarkdown={fontFamilyMarkdown}
+              theme={theme}
+            />
           )}
           {error && (
             <div
-              className={styles[`message-assistant`]}
+              className={cl(
+                styles[`message-assistant`],
+                classes?.messageAssistant,
+              )}
               style={{
                 backgroundColor: hexToTransparentHex("#ff0000", 0.8),
                 color: "#ffffff",
@@ -420,13 +364,16 @@ export const Conversation: React.FC<IProps> = ({
           )}
           {isPending && (
             <div
-              className={styles[`message-assistant`]}
+              className={cl(
+                styles[`message-assistant`],
+                classes?.messageAssistant,
+              )}
               style={{
                 backgroundColor: assistantBackgroundColor,
                 color: assistantTextColor,
               }}
             >
-              <div className={styles.typing}>
+              <div className={cl(styles.typing, classes?.typing)}>
                 <div className={styles.dot} />
                 <div className={styles.dot} />
                 <div className={styles.dot} />
@@ -446,9 +393,14 @@ export const Conversation: React.FC<IProps> = ({
           buttonBackgroundColor={buttonBackgroundColor}
           buttonTextColor={buttonTextColor}
           intls={intls}
+          theme={theme}
+          classes={{
+            inputContainer: classes?.inputContainer,
+            input: classes?.input,
+          }}
         />
         {!hiddenWatermark && (
-          <div className={styles.poweredBy}>
+          <div className={cl(styles.poweredBy, classes?.poweredBy)}>
             Propulsé par{" "}
             <a href="https://devana.ai" target="_blank" rel="noreferrer">
               Devana

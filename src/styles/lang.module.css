@@ -1,0 +1,51 @@
+@import url("./variables.module.css");
+.lang-selector {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 5px;
+    background-color: var(--bg-color-light);
+    backdrop-filter: blur(10px);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 20px;
+    height: 20px;
+    overflow: scroll;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px var(--box-shadow-color-light);
+    opacity: 0.4;
+}
+
+.lang-selector.dark  {
+    background-color: var(--bg-color-white);
+    box-shadow: 0 0 10px var(--box-shadow-color-dark);
+}
+
+.lang-selector div:nth-child(n+2) {
+    opacity: 0 !important;
+}
+
+.lang-selector:hover {
+    width: 20px;
+    max-height: calc(100% - 100px);
+    height: fit-content;
+    opacity: 1;
+}
+
+.lang-selector:hover div:nth-child(n+2) {
+    opacity: 0.6 !important;
+}
+
+
+
+.lang-selector svg {
+    border-radius: 2px;
+    width: 20px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.lang-selector svg:hover {
+    transform: scale(1.3);
+}

@@ -40,3 +40,30 @@ export enum EnumLangChat {
 
 export type TLang = EnumLangChat.fr | EnumLangChat.us;
 export type TLangKey = keyof typeof EnumLangChat;
+
+export type ITheme = "light" | "dark";
+
+export type TFontFamily =
+  | "-moz-initial"
+  | "inherit"
+  | "initial"
+  | "revert"
+  | "revert-layer"
+  | "unset"
+  | "cursive"
+  | "fantasy"
+  | "monospace"
+  | "sans-serif"
+  | "serif"
+  | (string & {});
+
+export type ThemeOverrides = {
+  "--bg-color-light"?: string;
+  "--bg-color-dark"?: string;
+  "--box-shadow-color-light"?: string;
+  "--box-shadow-color-dark"?: string;
+  "--border-color-light"?: string;
+  "--border-color-dark"?: string;
+  "--text-color-light"?: string;
+  "--bg-color-white"?: string;
+};

@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
-import styles from "./TextField.module.css";
-import { IIntls } from "../types";
+import { IIntls, ITheme, ThemeOverrides } from "../types";
+import styles from "../styles/textfield.module.css";
 import ResetChatIcon from "../assets/reset-chat";
+import classNames from "classnames";
 
 const MuiTextField: React.FC<{
   value: string;
@@ -12,6 +15,12 @@ const MuiTextField: React.FC<{
   buttonTextColor?: string;
   intls?: IIntls;
   showResetButton?: boolean;
+  theme?: ITheme;
+  classes?: {
+    inputContainer?: string;
+    input?: string;
+  };
+  themeOverrides?: ThemeOverrides;
 }> = ({
   value,
   onChange,
@@ -21,6 +30,9 @@ const MuiTextField: React.FC<{
   buttonTextColor,
   intls,
   showResetButton,
+  theme,
+  classes,
+  themeOverrides,
 }) => {
   return (
     <form
@@ -28,7 +40,10 @@ const MuiTextField: React.FC<{
         e.preventDefault();
         onSubmit();
       }}
-      className={styles.container}
+      className={classNames(styles.container, classes?.inputContainer, {
+        [styles.dark as string]: theme === "dark",
+      })}
+      style={themeOverrides as React.CSSProperties}
     >
       {showResetButton && (
         <div>
@@ -42,7 +57,7 @@ const MuiTextField: React.FC<{
           placeholder={intls?.placeholder || "Entrez votre question"}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={styles.input}
+          className={classNames(styles.input, classes?.input)}
           maxLength={500}
           multiple
           required
