@@ -8,7 +8,6 @@
     backdrop-filter: blur(10px);
     border-radius: 5px;
     z-index: 1000;
-    width: 20px;
     height: 20px;
     overflow: scroll;
     transition: all 0.3s;
@@ -26,7 +25,6 @@
 }
 
 .lang-selector:hover {
-    width: 20px;
     max-height: calc(100% - 100px);
     height: fit-content;
     opacity: 1;
