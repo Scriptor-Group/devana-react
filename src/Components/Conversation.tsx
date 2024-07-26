@@ -21,6 +21,8 @@ import Lang from "./Lang";
 import Message from "./Message";
 import TypingMessage from "./TypingMessage";
 import cl from "classnames";
+import Pending from "./Pending";
+import { run } from "jest";
 
 interface IProps {
   publicKey: string;
@@ -110,6 +112,8 @@ export const Conversation: React.FC<IProps> = ({
   }, [messages, typingMessage, query]);
 
   useEffect(() => {
+    if (tools.length === 0 || !displayTools) return;
+    setIsPending(false);
     setRunnedTools(tools);
     setActiveTool(activeTool);
   }, [tools, activeTool]);
@@ -142,6 +146,7 @@ export const Conversation: React.FC<IProps> = ({
   useEffect(() => {
     if (token) return;
     setTryCreateToken(0);
+
     createToken();
   }, [publicKey]);
 
@@ -214,8 +219,6 @@ export const Conversation: React.FC<IProps> = ({
           if (message.trim().length > 0) {
             setIsPending(false);
           }
-        } else {
-          setIsPending(false);
         }
 
         setTypingMessage((value) => ({
@@ -365,22 +368,7 @@ export const Conversation: React.FC<IProps> = ({
             </div>
           )}
           {isPending && (
-            <div
-              className={cl(
-                styles[`message-assistant`],
-                classes?.messageAssistant,
-              )}
-              style={{
-                backgroundColor: assistantBackgroundColor,
-                color: assistantTextColor,
-              }}
-            >
-              <div className={cl(styles.typing, classes?.typing)}>
-                <div className={styles.dot} />
-                <div className={styles.dot} />
-                <div className={styles.dot} />
-              </div>
-            </div>
+            <Pending theme={theme} classes={{ typing: classes?.typing }} />
           )}
         </div>
         <div style={{ height: "50px" }} />
