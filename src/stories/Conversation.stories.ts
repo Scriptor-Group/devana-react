@@ -176,7 +176,7 @@ export const Primary: Story = {
 
 export const Secondary: Story = {
   args: {
-    publicKey: "6041a9b9-b371-4d71-ad22-36f70349a0a1",
+    publicKey: "",
     welcomeMessage: {
       fr: "Bonjour, je suis une IA conversationnelle",
       us: "Hello, I am a conversational AI",
