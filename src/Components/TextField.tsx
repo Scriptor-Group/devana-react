@@ -7,6 +7,7 @@ import classNames from "classnames";
 
 const MuiTextField: React.FC<{
   value: string;
+  disabled?: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
   onReset: () => void;
@@ -31,6 +32,7 @@ const MuiTextField: React.FC<{
   showResetButton,
   theme,
   classes,
+  disabled,
   themeOverrides,
 }) => {
   return (
@@ -78,7 +80,9 @@ const MuiTextField: React.FC<{
         style={{
           backgroundColor: buttonBackgroundColor,
           color: buttonTextColor,
+          opacity: disabled ? 0.5 : 1,
         }}
+        disabled={disabled}
       >
         {intls?.send || "Envoyer"}
       </button>

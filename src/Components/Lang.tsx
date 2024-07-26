@@ -32,6 +32,7 @@ const Lang: React.FC<IProps> = ({ value, onChange, theme, themeOverrides }) => {
             }}
           >
             <div
+              className={styles["flag"]}
               dangerouslySetInnerHTML={{
                 __html: flags[l as keyof typeof flags],
               }}

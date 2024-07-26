@@ -33,6 +33,7 @@ interface IProps {
   assistantTextColor?: string;
   userBackgroundColor?: string;
   userTextColor?: string;
+  disabled?: boolean;
   chatBackgroundColor?: string;
   chatBackgroundSecondaryColor?: string;
   buttonBackgroundColor?: string;
@@ -79,6 +80,7 @@ export const Conversation: React.FC<IProps> = ({
   hiddenWatermark,
   onEvent,
   displayActions,
+  disabled,
   displayTools,
   theme,
   classes,
@@ -384,6 +386,7 @@ export const Conversation: React.FC<IProps> = ({
           buttonTextColor={buttonTextColor}
           intls={intls}
           theme={theme}
+          disabled={disabled}
           classes={{
             inputContainer: classes?.inputContainer,
             input: classes?.input,
