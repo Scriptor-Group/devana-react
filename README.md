@@ -159,4 +159,4 @@ function App() {
 
 ## Chat API
 
-Pour plus d'informations sur l'API de chat, veuillez consulter la documentation officielle : [https://github.com/Scriptor-Group/documentation/blob/main/Devana/publicAgentAPI.md](https://github.com/Scriptor-Group/documentation/blob/main/Devana/publicAgentAPI.md).
+Pour plus d'informations sur l'API de chat, veuillez consulter la documentation officielle : [https://github.com/Scriptor-Group/documentation/blob/main/Devana/publicAgentAPI.md](https://github.com/Scriptor-Group/documentation/blob/main/).
