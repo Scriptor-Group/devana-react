@@ -2,19 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import { API_URL, API_VERSION } from "../config";
 import { IMessage, TFiabilityMessage, TLangKey } from "../types";
 
+export type UseChat = {
+  userToken?: string | null;
+  customUrl?: string;
+}
+
 /**
  * Custom hook for handling chat functionality.
  * @param {Object} options - The options object.
  * @param {string | null} options.userToken - The user token.
  * @returns {Object} - An object containing the sendMessage function, generating state, and handleStop function.
  */
-export const useChat = ({ userToken }: { userToken?: string | null }) => {
+export const useChat = ({ userToken, customUrl }: UseChat) => {
+  const [url, setUrl] = useState<string>(customUrl || API_URL);
   const [generating, setGenerating] = useState(false);
   const [tools, setTools] = useState<string[]>([]);
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const eventSource = useRef<EventSource | null>(null);
 
   useEffect(() => {
+    if (customUrl && customUrl !== url) {
+      setUrl(customUrl);
+    }
     // if component is unmounted, close event source
     return () => {
       if (eventSource?.current) {
@@ -22,7 +31,7 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
         eventSource.current = null;
       }
     };
-  }, []);
+  }, [customUrl]);
 
   /**
    * Sends a message to the chat server.
@@ -49,10 +58,10 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
     setGenerating(true);
     setTools([]);
 
-    const url = `${API_URL}${API_VERSION}/chat/conversation/public/message`;
+    const uri = `${url}${API_VERSION}/chat/conversation/public/message`;
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(uri, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,10 +159,10 @@ export const useChat = ({ userToken }: { userToken?: string | null }) => {
     },
   ) => {
     if (!message.message_id) return;
-    const url = `${API_URL}${API_VERSION}/chat/conversation/public/message/fiability`;
+    const uri = `${url}${API_VERSION}/chat/conversation/public/message/fiability`;
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(uri, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

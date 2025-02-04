@@ -98,6 +98,7 @@ export const Conversation: React.FC<IProps> = ({
   });
   const { sendMessage, handleFiabilityMessageIA, tools, activeTool } = useChat({
     userToken: token,
+    customUrl,
   });
   const refScroll = React.useRef<HTMLDivElement>(null);
   const [isAutoScroll, setIsAutoScroll] = React.useState(true);
