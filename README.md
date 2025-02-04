@@ -74,6 +74,7 @@ Le composant `Conversation` accepte les props suivantes :
   - `btnContainerFiability`: la classe CSS pour le conteneur des boutons de fiabilité.
   - `thumpDownIcon`: la classe CSS pour l'icône de "thumb down".
   - `thumpUpIcon`: la classe CSS pour l'icône de "thumb up".
+- `customUrl`: (optionnel) : L'url custom de devana
 
 ## Utilisation
 

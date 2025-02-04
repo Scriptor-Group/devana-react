@@ -62,6 +62,7 @@ interface IProps {
     thumpDownIcon?: string;
     thumpUpIcon?: string;
   };
+  customUrl?: string;
 }
 
 export const Conversation: React.FC<IProps> = ({
@@ -87,11 +88,14 @@ export const Conversation: React.FC<IProps> = ({
   scrollHeightChat = "50vh",
   fontFamilyMarkdown = "inherit",
   themeOverrides = {},
+  customUrl,
 }) => {
   const [tryCreateToken, setTryCreateToken] = useState(0);
   const [query, setQuery] = React.useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const { token, createToken, getConversationHistory } = useApi(publicKey, {});
+  const { token, createToken, getConversationHistory } = useApi(publicKey, {
+    customUrl,
+  });
   const { sendMessage, handleFiabilityMessageIA, tools, activeTool } = useChat({
     userToken: token,
   });

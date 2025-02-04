@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL, API_VERSION } from "../config";
 import { IMessage } from "../types";
 import { getTokenCookie, setTokenCookie } from "../commons";
 
 export interface IOptions {
   token?: string;
+  customUrl?: string;
 }
 /**
  * Custom hook for interacting with an API.
@@ -13,9 +14,16 @@ export interface IOptions {
  * @returns An object containing the token, createToken function, and getConversationHistory function.
  */
 export const useApi = (publicKey: string, options?: IOptions) => {
+  const [url, setUrl] = useState<string | null>(options?.customUrl || API_URL);
   const [token, setToken] = useState<string | null>(
     options?.token || getTokenCookie() || null,
   );
+
+  useEffect(() => {
+    if (options?.customUrl && options.customUrl !== url) {
+      setUrl(options.customUrl);
+    }
+  }, [options?.customUrl]);
 
   /**
    * Creates a token by making a POST request to the API.
